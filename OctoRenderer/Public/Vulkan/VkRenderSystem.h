@@ -1,8 +1,12 @@
 #pragma once
 #include <glm\vec2.hpp>
 #include <vector>
-#include <External\vulkan\vulkan.h>
-#include "../DOD.h"
+#include "ThirdParty\vulkan\vulkan.h"
+#include "OctoCore/Public/DOD.h"
+
+#include <Windows.h>
+#include <Windowsx.h>
+#include <mmsystem.h>
 
 namespace Renderer
 {

@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
-#include <External\vulkan\vulkan.h>
-#include "../DODResource.h"
+#include "ThirdParty/vulkan/vulkan.h"
+#include "OctoCore/Public/DODResource.h"
 
 namespace Renderer
 {

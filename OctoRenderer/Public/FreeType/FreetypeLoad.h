@@ -12,7 +12,9 @@
 	//#define FT_BASE(x) __declspec(import) x
 #endif
 
-#include <External\freetype\include\ft2build.h>
+#include <ThirdParty\freetype\include\ft2build.h>
+#include <unordered_map>
+#include <string>
 #include FT_FREETYPE_H //Include main FREETYPE2 API
 
 

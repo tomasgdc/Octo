@@ -1,7 +1,7 @@
-#include "DrawCallManager.h"
-#include "VkPipelineLayoutManager.h"
-#include "VkRenderSystem.h"
-#include "VulkanTools.h"
+#include "Vulkan/DrawCallManager.h"
+#include "Vulkan/VkPipelineLayoutManager.h"
+#include "Vulkan/VkRenderSystem.h"
+#include "Vulkan/VulkanTools.h"
 
 namespace Renderer
 {

@@ -26,7 +26,7 @@
 #else
 #endif
 
-#include <External\vulkan\vulkan.h>
+#include "ThirdParty\vulkan\vulkan.h"
 
 #ifdef __ANDROID__
 #include "vulkanandroid.h"

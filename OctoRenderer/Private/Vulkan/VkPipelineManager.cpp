@@ -1,11 +1,11 @@
 #include "Vulkan\VkPipelineManager.h"
-
-#include "VulkanRendererInitializer.h"
 #include "Vulkan\VkRenderPassManager.h"
 #include "Vulkan\VkPipelineLayoutManager.h"
 #include "Vulkan\VkGpuProgram.h"
 #include "Vulkan\VkBufferLayoutManager.h"
-#include "VkRenderSystem.h"
+#include "Vulkan\VkRenderSystem.h"
+#include "Vulkan\VulkanTools.h"
+#include "Vulkan\VulkanRendererInitializer.h"
 
 namespace Renderer
 {

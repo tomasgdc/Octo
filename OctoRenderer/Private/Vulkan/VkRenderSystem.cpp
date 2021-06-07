@@ -1,19 +1,23 @@
-#include "VkRenderSystem.h"
-#include "VulkanTools.h"
-#include "VulkanDebug.h"
+#include "Vulkan/VkRenderSystem.h"
+#include "Vulkan/VulkanTools.h"
+#include "Vulkan/VulkanDebug.h"
 
-#include "VkPipelineManager.h"
-#include "VkRenderPassManager.h"
-#include "VkPipelineLayoutManager.h"
-#include "VkGpuProgram.h"
-#include "VkBufferLayoutManager.h"
-#include "VkBufferObjectManager.h"
-#include "VkUniformBufferManager.h"
-#include "DrawCallManager.h"
-#include "VkDrawCallDispatcher.h"
-#include "VkGPUMemoryManager.h"
-#include "VkImageManager.h"
-#include "VkFrameBufferManager.h"
+#include "Vulkan/VkPipelineManager.h"
+#include "Vulkan/VkRenderPassManager.h"
+#include "Vulkan/VkPipelineLayoutManager.h"
+#include "Vulkan/VkGpuProgram.h"
+#include "Vulkan/VkBufferLayoutManager.h"
+#include "Vulkan/VkBufferObjectManager.h"
+#include "Vulkan/VkUniformBufferManager.h"
+#include "Vulkan/DrawCallManager.h"
+#include "Vulkan/VkDrawCallDispatcher.h"
+#include "Vulkan/VkGPUMemoryManager.h"
+#include "Vulkan/VkImageManager.h"
+#include "Vulkan/VkFrameBufferManager.h"
+
+//Other
+#include <algorithm>
+#include <iostream>
 
 
 

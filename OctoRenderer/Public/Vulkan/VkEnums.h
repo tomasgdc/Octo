@@ -1,5 +1,5 @@
 #pragma once
-#include <External\vulkan\vulkan.h>
+#include "ThirdParty\vulkan\vulkan.h"
 
 
 namespace AttachementFlags

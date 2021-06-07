@@ -3,8 +3,7 @@
 *	GitHub repository - https://github.com/TywyllSoftware/TywRenderer
 *	This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
-#include <RendererPch\stdafx.h>
-#include "FreetypeLoad.h"
+#include "FreeType/FreetypeLoad.h"
 
 #define HRES  64
 #define HRESf 64.f
@@ -80,11 +79,16 @@ bool GlyphData::InitiliazeChars(const char* source)
 		// init the gd.bitmap_buffer array to be the size needed
 		try
 		{
-			gd.bitmap_buffer = TYW_NEW unsigned char[glyph->bitmap.width*glyph->bitmap.rows];
+			gd.bitmap_buffer = new unsigned char[glyph->bitmap.width*glyph->bitmap.rows];
 		}
 		catch (...) 
 		{
-			SAFE_DELETE_ARRAY(gd.bitmap_buffer);
+			if (gd.bitmap_buffer != nullptr)
+			{
+				delete [] gd.bitmap_buffer;
+				gd.bitmap_buffer = nullptr;
+			}
+
 			log = "ERROR: Could not allocate memory for bitmap_buffer \r\n";
 			return false;
 		}
@@ -179,8 +183,13 @@ Data GlyphData::getChar(char c) {
 }
 
 void GlyphData::ReleaseBuffer() {
-	for (auto it = glyphs.begin(); it != glyphs.end(); ++it) {
-		SAFE_DELETE_ARRAY(it->second.bitmap_buffer);
+	for (auto it = glyphs.begin(); it != glyphs.end(); ++it) 
+	{
+		if (it->second.bitmap_buffer != nullptr)
+		{
+			delete [] it->second.bitmap_buffer;
+			it->second.bitmap_buffer = nullptr;
+		}
 	}
 }
 

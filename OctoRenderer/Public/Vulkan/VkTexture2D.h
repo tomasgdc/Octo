@@ -1,11 +1,11 @@
 //Copyright 2015-2016 Tomas Mikalauskas. All rights reserved.
 #pragma once
-#include <External\vulkan\vulkan.h>
+#include <ThirdParty\vulkan\vulkan.h>
 
 
 
 
-class TYWRENDERER_API VkTexture2D
+class VkTexture2D
 {
 public:
 	VkTexture2D(VkPhysicalDevice physicalDevice, VkDevice device, VkQueue queue, VkCommandPool cmdPool);

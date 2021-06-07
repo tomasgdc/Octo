@@ -1,9 +1,9 @@
 #pragma once
 #include <vector>
-#include <External\vulkan\vulkan.h>
+#include "ThirdParty/vulkan/vulkan.h"
 #include "VkEnums.h"
-#include "../DODResource.h"
-#include "../../External/glm/glm/vec3.hpp"
+#include "OctoCore/Public/DODResource.h"
+#include "ThirdParty/glm/glm/vec3.hpp"
 
 namespace Renderer
 {

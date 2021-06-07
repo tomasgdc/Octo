@@ -3,17 +3,13 @@
 *	GitHub repository - https://github.com/TywyllSoftware/TywRenderer
 *	This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
-#include <RendererPch\stdafx.h>
 
+#include "Vulkan/VkBufferObject.h"
+#include "Vulkan/VulkanTools.h"
+#include "Vulkan/VulkanSwapChain.h"
+#include "Vulkan/VulkanRendererInitializer.h"
 
-#include "VkBufferObject.h"
-#include "VulkanTools.h"
-#include "VulkanSwapChain.h"
-#include <Geometry\VertData.h>
-#include "VulkanRendererInitializer.h"
-#include "VKRenderer.h"
-
-
+#include "Geometry/VertData.h"
 
 namespace VkBufferObject
 {

@@ -1,7 +1,8 @@
 #include "Vulkan\VulkanTools.h"
 
-
-
+//Other
+#include <cassert>
+#include <vector>
 
 
 std::string VkTools::VkResultToString(const VkResult& errorCode)

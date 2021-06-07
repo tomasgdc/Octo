@@ -1,7 +1,7 @@
-#include "VkBufferObjectManager.h"
-#include "VulkanTools.h"
-#include "VulkanSwapChain.h"
-#include "VkRenderSystem.h"
+#include "Vulkan/VkBufferObjectManager.h"
+#include "Vulkan/VulkanTools.h"
+#include "Vulkan/VulkanSwapChain.h"
+#include "Vulkan/VkRenderSystem.h"
 
 namespace Renderer
 {

@@ -1,8 +1,12 @@
-#include "VkPipelineLayoutManager.h"
-#include "VkUniformBufferManager.h"
+#include "Vulkan/VkPipelineLayoutManager.h"
+#include "Vulkan/VkUniformBufferManager.h"
 
-#include "VulkanTools.h"
-#include "VkRenderSystem.h"
+#include "Vulkan/VulkanTools.h"
+#include "Vulkan/VkRenderSystem.h"
+
+//other
+#include <vector>
+#include <algorithm>
 
 namespace Renderer
 {

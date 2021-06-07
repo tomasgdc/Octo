@@ -1,8 +1,9 @@
-#include <RendererPch\stdafx.h>
-
 //Vulkan Renderer Includes
-#include "VulkanTools.h"
-#include"VulkanTextureLoader.h"
+#include "Vulkan/VulkanTools.h"
+#include"Vulkan/VulkanTextureLoader.h"
+
+//ThirdParty
+#include <ThirdParty/gli/gli/gli.hpp>
 
 VkTools::VulkanTextureLoader::VulkanTextureLoader(VkPhysicalDevice physicalDevice, VkDevice device, VkQueue queue, VkCommandPool cmdPool)
 {

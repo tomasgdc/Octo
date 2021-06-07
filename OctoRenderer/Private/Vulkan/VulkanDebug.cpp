@@ -11,7 +11,7 @@
 #include "Vulkan\VulkanDebug.h"
 #include <iostream>
 
-#include "vulkandebug.h"
+#include "Vulkan\vulkandebug.h"
 #include <iostream>
 
 namespace vkDebug

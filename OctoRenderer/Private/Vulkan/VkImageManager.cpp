@@ -1,7 +1,7 @@
-#include "VkImageManager.h"
-#include "VkRenderSystem.h"
-#include "VkGPUMemoryManager.h"
-#include "VulkanTools.h"
+#include "Vulkan/VkImageManager.h"
+#include "Vulkan/VkRenderSystem.h"
+#include "Vulkan/VkGPUMemoryManager.h"
+#include "Vulkan/VulkanTools.h"
 
 namespace Renderer
 {

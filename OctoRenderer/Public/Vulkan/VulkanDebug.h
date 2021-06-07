@@ -14,11 +14,11 @@
 #ifdef __ANDROID__
 #include "Vulkan\VulkanAndroid.h"
 #else
-#include <External\vulkan\vulkan.h>
+#include "ThirdParty\vulkan\vulkan.h"
 #endif
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
-#include <External\glm\glm\glm.hpp>
+#include "ThirdParty\glm\glm\glm.hpp"
 
 
 namespace vkDebug

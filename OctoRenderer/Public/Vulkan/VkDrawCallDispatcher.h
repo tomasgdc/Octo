@@ -1,5 +1,5 @@
 #pragma once
-#include "../DOD.h"
+#include "OctoCore/Public/DOD.h"
 
 namespace Renderer
 {

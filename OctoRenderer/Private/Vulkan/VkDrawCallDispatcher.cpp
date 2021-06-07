@@ -1,14 +1,13 @@
-#include "VkDrawCallDispatcher.h"
-#include "DrawCallManager.h"
-#include "VkPipelineLayoutManager.h"
-#include "VkPipelineManager.h"
-#include "VkRenderPassManager.h"
-#include "VkBufferObjectManager.h"
-#include "VkRenderSystem.h"
-#include "VulkanTools.h"
-#include "VkFrameBufferManager.h"
+#include "Vulkan/VkDrawCallDispatcher.h"
+#include "Vulkan/DrawCallManager.h"
+#include "Vulkan/VkPipelineLayoutManager.h"
+#include "Vulkan/VkPipelineManager.h"
+#include "Vulkan/VkRenderPassManager.h"
+#include "Vulkan/VkBufferObjectManager.h"
+#include "Vulkan/VkRenderSystem.h"
+#include "Vulkan/VulkanTools.h"
+#include "Vulkan/VkFrameBufferManager.h"
 
-#include "VulkanRendererInitializer.h"
 #include <array>
 
 namespace Renderer

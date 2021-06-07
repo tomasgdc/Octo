@@ -4,7 +4,8 @@
 *	This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
 #pragma once
-#include <External\vulkan\vulkan.h>
+#include <ThirdParty\vulkan\vulkan.h>
+#include <vector>
 
 //forward declaration
 class VulkanSwapChain;

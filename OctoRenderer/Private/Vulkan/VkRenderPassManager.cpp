@@ -1,7 +1,6 @@
-#include "VkRenderPassManager.h"
-#include "VulkanTools.h"
-#include "VkRenderSystem.h"
-#include "VulkanRendererInitializer.h"
+#include "Vulkan/VkRenderPassManager.h"
+#include "Vulkan/VulkanTools.h"
+#include "Vulkan/VkRenderSystem.h"
 
 namespace Renderer
 {

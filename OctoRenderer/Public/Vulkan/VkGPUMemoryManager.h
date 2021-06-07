@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <External\vulkan\vulkan.h>
+#include "ThirdParty\vulkan\vulkan.h"
 #include "VkEnums.h"
 
 namespace Renderer

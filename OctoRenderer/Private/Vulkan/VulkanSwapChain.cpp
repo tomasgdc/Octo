@@ -1,6 +1,8 @@
 #include "Vulkan\VulkanSwapChain.h"
 #include "Vulkan\VulkanTools.h"
 
+#include <ThirdParty/vulkan/vulkan.h>
+
 //Global
 VkDevice VulkanSwapChain::device;
 

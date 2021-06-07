@@ -20,6 +20,9 @@ PROJECT(Octo)
 
 # Reduce the config types to only Debug and Release
 SET(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE)
+IF(DEFINED CMAKE_BUILD_TYPE AND CMAKE_VERSION VERSION_GREATER "3.4")
+  SET_PROPERTY(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS  ${CMAKE_CONFIGURATION_TYPES})
+ENDIF()
 SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} --my-debug-flags")
 SET(CMAKE_DEBUG_POSTFIX "_d")
 
@@ -38,20 +41,6 @@ add_definitions(-std=c++14)
 add_definitions(-std=c++0x)
 add_definitions(-std=gnu++14)
 
-if (ANDROID)
-	set(CMAKE_ANDROID_GUI TRUE)
-	set(CMAKE_ANDROID_API 24)
-	set(CMAKE_ANDROID_API_MIN 24)
-	
-	if(DEFINED ANDROID_NDK)
-		add_definitions(-DVK_USE_PLATFORM_ANDROID_KHR)
-	endif()
-endif()
-
-
-IF(WIN32)
-  ADD_DEFINITIONS(-DUNICODE -D_UNICODE)
-ENDIF()
 
 SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Lib)
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Bin)
@@ -59,35 +48,29 @@ SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Bin)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMakeModules")
 
-#include(cotire)
-
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
 
 find_package(ASSIMP REQUIRED)
 include_directories(${ASSIMP_INCLUDE_DIR})
 
-set(FREETPYE_PATH ${CMAKE_SOURCE_DIR}/ThirdParty/freetype)
+set(FREETPYE_PATH "${CMAKE_SOURCE_DIR}/ThirdParty/freetype/include")
 set(FREETYPE_LIB_SEARCH_PATH "${CMAKE_SOURCE_DIR}/ThirdParty/freetype/objs/vc2017/x64")
 
 find_package(Freetype_custom QUIET)
 include_directories(${FREETYPE_INCLUDE_DIR})
 
 #As we are building Assimp as static library. We need to get zlib. Luckily assimp contains zlib and builds it
-set(ZLIB_LIB_SEARCH_PATH ${CMAKE_SOURCE_DIR}/External/assimp/build/contrib/zlib)
+set(ZLIB_LIB_SEARCH_PATH ${CMAKE_SOURCE_DIR}/ThirdParty/assimp/build/contrib/zlib)
 find_package(Zlib REQUIRED)
 
-IF(WIN32)
-	find_library(VULKAN_LIB NAMES vulkan-1 vulkan PATHS ${CMAKE_SOURCE_DIR}/App)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVK_USE_PLATFORM_WIN32_KHR")
-ENDIF(WIN32)
 
 message(STATUS "Vulkan lib path:   " 		${VULKAN_LIB})
 message(STATUS "SDL2 lib path: 	   "   		${SDL2_LIBRARY})
 message(STATUS "Assimp lib path:   " 		${ASSIMP_LIBRARIES})
 message(STATUS "Freetype lib path: " 		${FREETYPE_LIBRARIES})
 message(STATUS "Freetype include path: " 	${FREETYP_INCLUDE_DIR})
-message(STATUS "Zlib lib path: "        $	{ZLIB_LIBRARIES}) 
+message(STATUS "Zlib lib path: "        	${ZLIB_LIBRARIES}) 
 
 ADD_SUBDIRECTORY(Octo)
 ADD_SUBDIRECTORY(OctoCore)

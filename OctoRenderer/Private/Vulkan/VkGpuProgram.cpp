@@ -1,8 +1,8 @@
-#include "VkGpuProgram.h"
+#include "Vulkan/VkGpuProgram.h"
 #include <cassert>
 
-#include "VulkanTools.h"
-#include "VkRenderSystem.h"
+#include "Vulkan/VulkanTools.h"
+#include "Vulkan/VkRenderSystem.h"
 
 namespace Renderer
 {

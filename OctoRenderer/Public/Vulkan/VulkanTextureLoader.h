@@ -10,7 +10,8 @@
 */
 
 #pragma once
-#include <External\vulkan\vulkan.h>
+#include <ThirdParty/vulkan/vulkan.h>
+#include <string>
 
 namespace VkTools
 {

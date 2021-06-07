@@ -2,6 +2,8 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.4)
 
 PROJECT(OctoRenderer)
 
+ADD_COMPILE_DEFINITIONS(VK_USE_PLATFORM_WIN32_KHR)
+
 SET(HEADERS_IMGUI
 	"Public/ImGui/imconfig.h"
 	"Public/ImGui/imgui.h"
@@ -54,6 +56,7 @@ SET(HEADERS_VULKAN
 	"Public/Vulkan/VkImageManager.h"
 	"Public/Vulkan/VkEnums.h"
 	"Public/Vulkan/VkGPUMemoryManager.h"
+	"Public/Vulkan/VulkanRendererInitializer.h"
 )
 SET(SOURCES_VULKAN
 	"Private/Vulkan/DrawCallManager.cpp"
@@ -75,6 +78,19 @@ SET(SOURCES_VULKAN
 	"Private/Vulkan/VkFrameBufferManager.cpp"
 	"Private/Vulkan/VkImageManager.cpp"
 	"Private/Vulkan/VkGPUMemoryManager.cpp"
+	"Private/Vulkan/VulkanRendererInitializer.cpp"
+)
+
+SOURCE_GROUP("Public\\Vulkan" FILES ${HEADERS_VULKAN})
+SOURCE_GROUP("Private\\Vulkan" FILES ${SOURCES_VULKAN})
+
+SET(HEADERS_GEOEMTRY
+	"Public/Geometry/VertData.h"
+	"Public/Geometry/JointTransform.h"
+	"Public/Geometry/TangentAndBinormalCalculator.hpp"
+)
+SET(SOURCES_GEOEMTRY
+	"Private/Geometry/JointTransform.cpp"
 )
 
 SOURCE_GROUP("Public\\Vulkan" FILES ${HEADERS_VULKAN})
@@ -82,17 +98,16 @@ SOURCE_GROUP("Private\\Vulkan" FILES ${SOURCES_VULKAN})
 
 	
 ADD_LIBRARY(${PROJECT_NAME} STATIC
-	${HEADERS_SCENE_MANAGER}
-	${SOURCES_SCENE_MANAGER}
 	${HEADERS_IMGUI}	
 	${SOURCES_IMGUI}
 	${HEADERS_FREETYPE}
 	${SOURCES_FREETYPE}
 	${HEADERS_VULKAN}
 	${SOURCES_VULKAN}
+	${HEADERS_GEOEMTRY}
+	${SOURCES_GEOEMTRY}
 )
 
-	
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC
 	${VULKAN_LIB}
 	${FREETYPE_LIBRARY}
@@ -107,6 +122,10 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC
 
 
 TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PUBLIC
+	"Public"
+	"Public/ImGui"
+	"Public/FreeType"
+	"Public/Geometry"
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_SOURCE_DIR}
 	)

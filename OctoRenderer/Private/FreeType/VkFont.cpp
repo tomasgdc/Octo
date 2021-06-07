@@ -3,9 +3,6 @@
 *	GitHub repository - https://github.com/TywyllSoftware/TywRenderer
 *	This code is licensed under the MIT license (MIT) (http://opensource.org/licenses/MIT)
 */
-#include <RendererPch\stdafx.h>
-
-
 #include "Geometry\VertData.h"
 #include "Geometry\JointTransform.h"
 
@@ -14,16 +11,17 @@
 #include "Vulkan\VkBufferObject.h"
 #include "Vulkan\VulkanTextureLoader.h"
 #include "Vulkan\VkTexture2D.h"
+#include "Vulkan\VulkanTools.h"
 
-//Main Renderer
-#include "VKRenderer.h"
-
-#include "ThirdParty\FreeType\FreetypeLoad.h"
-#include "VkFont.h"
+#include "FreeType\FreetypeLoad.h"
+#include "FreeType\VkFont.h"
 
 
 //math
-#include <External\glm\glm\gtc\matrix_inverse.hpp>
+#include <ThirdParty\glm\glm\gtc\matrix_inverse.hpp>
+#include <ThirdParty/glm/glm/gtx/matrix_operation.hpp>
+#include <ThirdParty/glm/glm/gtc/matrix_transform.hpp>
+#include <array>
 
 
 /*
@@ -40,7 +38,7 @@ VkFont::VkFont(VkPhysicalDevice physicalDevice,
 	VkFormat depthformat,
 	uint32_t *framebufferwidth,
 	uint32_t *framebufferheight)
-	:data(TYW_NEW GlyphData())
+	:data(new GlyphData())
 {
 	this->physicalDevice = physicalDevice;
 	this->device = device;
@@ -95,7 +93,7 @@ void VkFont::InitializeChars(char* source, VkTools::VulkanTextureLoader& pTextur
 		Data temp = data->getChar(source[i]);
 		if (temp.bitmap_buffer != nullptr && temp.c == source[i]) 
 		{
-			VkTools::VulkanTexture* texture = TYW_NEW VkTools::VulkanTexture;
+			VkTools::VulkanTexture* texture = new VkTools::VulkanTexture;
 			
 			pTextureLoader.GenerateTexture(temp.bitmap_buffer, texture, VkFormat::VK_FORMAT_R8_UNORM, sizeof(temp.bitmap_buffer), temp.bitmap_width, temp.bitmap_rows, 1, false,  VK_IMAGE_USAGE_SAMPLED_BIT);
 			glyphs.insert(std::unordered_map<char, VkTools::VulkanTexture*>::value_type(source[i], texture));
@@ -233,7 +231,11 @@ VkFont::~VkFont()
 	assert(data->Release() && "Could not delete GlyphData");
 
 	//delete glyph data
-	SAFE_DELETE(data);
+	if(data != nullptr)
+	{	
+		delete data;
+		data = nullptr;
+	}
 
 	//Destroy Shader Modules
 	for (int i = 0; i < m_ShaderModules.size(); i++)
@@ -452,8 +454,8 @@ void VkFont::PreparePipeline()
 
 
 
-	shaderStages[0] = LoadShader(VKRenderer::GetAssetPath() + "Shaders/FontRendering/FontRendering.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
-	shaderStages[1] = LoadShader(VKRenderer::GetAssetPath() + "Shaders/FontRendering/FontRendering.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
+	//shaderStages[0] = LoadShader(VKRenderer::GetAssetPath() + "Shaders/FontRendering/FontRendering.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
+	//shaderStages[1] = LoadShader(VKRenderer::GetAssetPath() + "Shaders/FontRendering/FontRendering.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
 
 
 	// Create Pipeline state VI-IA-VS-VP-RS-FS-CB

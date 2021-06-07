@@ -1,7 +1,8 @@
 #pragma once
 
 #include <cstdint>
-#include <External\vulkan\vulkan.h>
+#include <string>
+#include <ThirdParty\vulkan\vulkan.h>
 
 
 

@@ -1,8 +1,7 @@
-#include "VkBufferLayoutManager.h"
-#include "VulkanTools.h"
-
-#include "../External/glm/glm/glm.hpp"
-#include "../Geometry/VertData.h"
+#include "Vulkan/VkBufferLayoutManager.h"
+#include "Vulkan/VulkanTools.h"
+#include "Geometry/VertData.h"
+#include "ThirdParty/glm/glm/glm.hpp"
 
 namespace Renderer
 {
