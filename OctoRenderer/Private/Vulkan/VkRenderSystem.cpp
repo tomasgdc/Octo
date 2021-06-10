@@ -64,49 +64,46 @@ namespace Renderer
 
 		void RenderSystem::InitVulkanInstance(bool enableValidation, const std::string& application_name)
 		{
+			std::vector<const char*> enabledExtensions = 
+			{	
+				VK_KHR_SURFACE_EXTENSION_NAME, 
+				VK_KHR_WIN32_SURFACE_EXTENSION_NAME, 
+				VK_EXT_DEBUG_REPORT_EXTENSION_NAME 
+			};
+
+			std::vector<const char *> requiredValidationLayers = {};
+
+			//Get available extensions
+			uint32_t instance_extension_count;
+			VK_CHECK_RESULT(vkEnumerateInstanceExtensionProperties(nullptr, &instance_extension_count, nullptr));
+
+			std::vector<VkExtensionProperties> available_instance_extensions(instance_extension_count);
+			VK_CHECK_RESULT(vkEnumerateInstanceExtensionProperties(nullptr, &instance_extension_count, available_instance_extensions.data()));
+
+			//Get available validations
+			uint32_t instance_layer_count;
+			VK_CHECK_RESULT(vkEnumerateInstanceLayerProperties(&instance_layer_count, nullptr));
+
+			std::vector<VkLayerProperties> supported_validation_layers(instance_layer_count);
+			VK_CHECK_RESULT(vkEnumerateInstanceLayerProperties(&instance_layer_count, supported_validation_layers.data()));
+
 			/* Create device */
-			VkApplicationInfo appInfo = {};
-			appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+			VkApplicationInfo appInfo{ VK_STRUCTURE_TYPE_APPLICATION_INFO };
 			appInfo.pApplicationName = application_name.c_str();
+			appInfo.applicationVersion = 0;
 			appInfo.pEngineName = application_name.c_str();
-			appInfo.apiVersion = VK_API_VERSION_1_0;
-			appInfo.pNext = NULL;
-			//appInfo.engineVersion = 
+			appInfo.engineVersion = 0;
+			appInfo.apiVersion = VK_API_VERSION;
 
-
-			std::vector<const char*> enabledExtensions = { VK_KHR_SURFACE_EXTENSION_NAME };
-
-			// Enable surface extensions depending on os
-#if defined(_WIN32)
-			enabledExtensions.push_back(VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
-#elif defined(__ANDROID__)
-			enabledExtensions.push_back(VK_KHR_ANDROID_SURFACE_EXTENSION_NAME);
-#elif defined(__linux__)
-			enabledExtensions.push_back(VK_KHR_XCB_SURFACE_EXTENSION_NAME);
-#endif
-
-
-			VkInstanceCreateInfo instanceCreateInfo = {};
-			instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-			instanceCreateInfo.pNext = NULL;
-			instanceCreateInfo.flags = 0;
+			VkInstanceCreateInfo instanceCreateInfo = { VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO };
 			instanceCreateInfo.pApplicationInfo = &appInfo;
-			if (enabledExtensions.size() > 0)
-			{
-				if (enableValidation)
-				{
-					enabledExtensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
-				}
-				instanceCreateInfo.enabledExtensionCount = (uint32_t)enabledExtensions.size();
-				instanceCreateInfo.ppEnabledExtensionNames = enabledExtensions.data();
-			}
-			if (enableValidation)
-			{
-				instanceCreateInfo.enabledLayerCount = vkDebug::validationLayerCount;
-				instanceCreateInfo.ppEnabledLayerNames = vkDebug::validationLayerNames;
-			}
+			instanceCreateInfo.enabledExtensionCount = enabledExtensions.size();
+			instanceCreateInfo.ppEnabledExtensionNames = enabledExtensions.data();
+			instanceCreateInfo.enabledLayerCount = requiredValidationLayers.size();
+			instanceCreateInfo.ppEnabledLayerNames = requiredValidationLayers.data();
 
-			VK_CHECK_RESULT(vkCreateInstance(&instanceCreateInfo, nullptr, &vkInstance));
+			VkResult  res = vkCreateInstance(&instanceCreateInfo, nullptr, &vkInstance);
+			VK_CHECK_RESULT(res);
 		}
 
 		void RenderSystem::Shutdown()
@@ -262,9 +259,9 @@ namespace Renderer
 			std::vector<const char*> enabledExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
 			// enable the debug marker extension if it is present (likely meaning a debugging tool is present)
-			if (VkTools::CheckDeviceExtensionPresent(vkPhysicalDevice, VK_EXT_DEBUG_MARKER_EXTENSION_NAME))
+			if (VkTools::CheckDeviceExtensionPresent(vkPhysicalDevice, VK_EXT_DEBUG_REPORT_EXTENSION_NAME))
 			{
-				enabledExtensions.push_back(VK_EXT_DEBUG_MARKER_EXTENSION_NAME);
+				enabledExtensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
 				//enableDebugMarkers = true;
 			}
 
@@ -449,7 +446,7 @@ namespace Renderer
 			VK_CHECK_RESULT(result);
 
 			static VkFormat surfaceFormatToUse = VK_FORMAT_B8G8R8A8_UNORM;
-			static VkColorSpaceKHR surfaceColorSpaceToUse = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
+			static VkColorSpaceKHR surfaceColorSpaceToUse = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
 
 			// Get available present modes
 			uint32_t presentModeCount;
