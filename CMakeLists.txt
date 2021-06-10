@@ -64,6 +64,8 @@ include_directories(${FREETYPE_INCLUDE_DIR})
 set(ZLIB_LIB_SEARCH_PATH ${CMAKE_SOURCE_DIR}/ThirdParty/assimp/build/contrib/zlib)
 find_package(Zlib REQUIRED)
 
+find_library(VULKAN_LIB NAMES vulkan-1 vulkan PATHS ${CMAKE_SOURCE_DIR}/App)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVK_USE_PLATFORM_WIN32_KHR")
 
 message(STATUS "Vulkan lib path:   " 		${VULKAN_LIB})
 message(STATUS "SDL2 lib path: 	   "   		${SDL2_LIBRARY})
