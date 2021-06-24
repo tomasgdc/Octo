@@ -5,10 +5,14 @@ PROJECT(OctoCore)
 SET(HEADERS
 	"Public/DOD.h"
 	"Public/DODResource.h"
+	"Public/LinearAllocator.h"
+	"Public/Allocator.h"
 )
 
 SET(SOURCES
 	"Private/AssimpLoader.cpp"
+	"Private/LinearAllocator.cpp"
+	"Private/Allocator.cpp"
 )
 SOURCE_GROUP("Public" FILES ${HEADERS})
 SOURCE_GROUP("Private" FILES ${SOURCES})
