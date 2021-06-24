@@ -25,7 +25,22 @@ namespace Core
 
 		bool LinearAllocator::Fits(std::size_t size, std::size_t allignement)
 		{
-			return false;
+			std::size_t padding = 0;
+			std::size_t paddedAddress = 0;
+			const std::size_t currentAddress = (std::size_t)m_StartPtr + m_Offset;
+
+			if (allignement != 0 && m_Offset % allignement != 0)
+			{
+				// Alignment is required. Find the next aligned memory address and update offset
+				padding = CalculatePadding(currentAddress, allignement);
+			}
+
+			if (m_Offset + padding + size > m_TotalSize)
+			{
+				return false;
+			}
+
+			return true;
 		}
 
 		void* LinearAllocator::Allocate(std::size_t size, std::size_t allignement)
