@@ -4,6 +4,19 @@ PROJECT(OctoRenderer)
 
 ADD_COMPILE_DEFINITIONS(VK_USE_PLATFORM_WIN32_KHR)
 
+SET(HEADERS_RENDERER
+	"Public/OctoRenderProcess.h"
+	"Public/OctoRenderPassFullScreen.h"
+	"Public/OctoRenderPassMesh.h"
+)
+SET(SOURCES_RENDERER
+	"Private/OctoRenderProcess.cpp"
+	"Private/OctoRenderPassFullScreen.cpp"
+	"Private/OctoRenderPassMesh.cpp"
+)
+SOURCE_GROUP("Public"  FILES 	${HEADERS_RENDERER})
+SOURCE_GROUP("Private" FILES 	${SOURCES_RENDERER})
+
 SET(HEADERS_IMGUI
 	"Public/ImGui/imconfig.h"
 	"Public/ImGui/imgui.h"
@@ -98,6 +111,8 @@ SOURCE_GROUP("Private\\Vulkan" FILES ${SOURCES_VULKAN})
 
 	
 ADD_LIBRARY(${PROJECT_NAME} STATIC
+	${HEADERS_RENDERER}
+	${SOURCES_RENDERER}
 	${HEADERS_IMGUI}	
 	${SOURCES_IMGUI}
 	${HEADERS_FREETYPE}
