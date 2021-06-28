@@ -3,6 +3,26 @@
 #include "Vulkan/VkGPUMemoryManager.h"
 #include "Vulkan/VulkanTools.h"
 
+namespace
+{
+	void AllocateMemory(MemoryPoolTypes::GpuMemoryAllocationInfo& memAllocInfo, MemoryPoolTypes::Enum poolType, const VkMemoryRequirements memRegs)
+	{
+		bool bNeedsAlloc = true;
+		
+		if(poolType >= MemoryPoolTypes::kRangeStartStatic && poolType <= MemoryPoolTypes::kRangeEndStatic)
+		{ 
+			if (memAllocInfo._sizeInBytes <= memRegs.size && memAllocInfo._alignmentInBytes == memRegs.alignment && memAllocInfo._memoryPoolType == poolType)
+			{
+				bNeedsAlloc = false;
+			}
+		}
+
+		if (bNeedsAlloc)
+		{
+			memAllocInfo = Renderer::Vulkan::GpuMemoryManager::AllocateOffset(poolType, memRegs.size, memRegs.alignment, memRegs.memoryTypeBits);
+		}
+	}
+}
 namespace Renderer
 {
 	namespace Resource
@@ -24,22 +44,23 @@ namespace Renderer
 			const uint32_t arrayLayerCount = ImageManager::GetArrayLayerCount(ref);
 			const uint32_t mipLevelCount = ImageManager::GetMipLevelCount(ref);
 			const MemoryPoolTypes::Enum memoryPoolType = ImageManager::GetMemoryPoolType(ref);
+			MemoryPoolTypes::GpuMemoryAllocationInfo& memoryAllocationInfo = ImageManager::GetMemoryAllocationInfo(ref);
 
-			assert(dimensions.x >= 1.0f && dimensions.y >= 1.0f &&
-				dimensions.z >= 1.0f);
+			assert(dimensions.x >= 1.0f && dimensions.y >= 1.0f && dimensions.z >= 1.0f);
 
 			VkImageType vkImageType = VK_IMAGE_TYPE_1D;
 			VkImageViewType vkImageViewTypeSubResource = VK_IMAGE_VIEW_TYPE_1D;
-			VkImageViewType vkImageViewType = arrayLayerCount == 1u
-				? VK_IMAGE_VIEW_TYPE_1D
-				: VK_IMAGE_VIEW_TYPE_1D_ARRAY;
+			VkImageViewType vkImageViewType = arrayLayerCount == 1u ? VK_IMAGE_VIEW_TYPE_1D : VK_IMAGE_VIEW_TYPE_1D_ARRAY;
+
+			bool isDepthTarget = false;
+			bool isStencilTarget = false;
 
 			if (dimensions.y >= 2.0f && dimensions.z == 1.0f)
 			{
 				vkImageType = VK_IMAGE_TYPE_2D;
 				vkImageViewTypeSubResource = VK_IMAGE_VIEW_TYPE_2D;
-				vkImageViewType = arrayLayerCount == 1u ? VK_IMAGE_VIEW_TYPE_2D
-					: VK_IMAGE_VIEW_TYPE_2D_ARRAY;
+				vkImageViewType = arrayLayerCount == 1u ? VK_IMAGE_VIEW_TYPE_2D : VK_IMAGE_VIEW_TYPE_2D_ARRAY;
+				ImageManager::GetImageTextureType(ref) =  arrayLayerCount == 1u ? ImageTextureType::k2D : ImageTextureType::k2DArray;
 			}
 			else if (dimensions.y >= 2.0f && dimensions.z >= 2.0f)
 			{
@@ -47,6 +68,7 @@ namespace Renderer
 				vkImageType = VK_IMAGE_TYPE_3D;
 				vkImageViewTypeSubResource = VK_IMAGE_VIEW_TYPE_3D;
 				vkImageViewType = VK_IMAGE_VIEW_TYPE_3D;
+				ImageManager::GetImageTextureType(ref) = arrayLayerCount == 1u ? ImageTextureType::k2D : ImageTextureType::k2DArray;
 			}
 
 			VkImageCreateInfo imageCreateInfo = {};
@@ -56,17 +78,48 @@ namespace Renderer
 
 			imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
 
-			if (props.linearTilingFeatures & VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT)
-			{
-				imageCreateInfo.tiling = VK_IMAGE_TILING_LINEAR;
-			}
-			else if (props.optimalTilingFeatures & VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT)
-			{
-				imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+			if(imageFlags & ImageFlags::kUsageAttachment)
+			{ 
+				if(isDepthTarget || isStencilTarget)
+				{
+					if (props.linearTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
+					{
+						imageCreateInfo.tiling = VK_IMAGE_TILING_LINEAR;
+					}
+					else if (props.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
+					{
+						imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+					}
+					else
+					{
+						assert(false && "Depth/stencil format not supported");
+					}
+				}
 			}
 			else
 			{
-				assert(false && "Color format not supported");
+				if (props.linearTilingFeatures & VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT)
+				{
+					imageCreateInfo.tiling = VK_IMAGE_TILING_LINEAR;
+				}
+				else if (props.optimalTilingFeatures & VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT)
+				{
+					imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+				}
+				else
+				{
+					assert(false && "Color format not supported");
+				}
+			}
+
+			if (imageFlags & ImageFlags::kUsageSampled > 0u)
+			{
+
+			}
+
+			if (imageFlags & ImageFlags::kUsageStorage > 0u)
+			{
+
 			}
 
 			imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -85,7 +138,22 @@ namespace Renderer
 			imageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
 			// Setup usage
-			imageCreateInfo.usage = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+			imageCreateInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+			if (imageFlags & ImageFlags::kUsageAttachment > 0)
+			{
+				imageCreateInfo.usage |= (isDepthTarget || isStencilTarget) ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+			}
+
+			if (imageFlags & ImageFlags::kUsageSampled > 0u)
+			{
+				imageCreateInfo.usage |= VK_IMAGE_USAGE_SAMPLED_BIT;
+			}
+
+			if (imageFlags & ImageFlags::kUsageStorage > 0u)
+			{
+				imageCreateInfo.usage |= VK_IMAGE_USAGE_STORAGE_BIT;
+			}
+
 			imageCreateInfo.flags = 0u;
 
 			VK_CHECK_RESULT(vkCreateImage(Renderer::Vulkan::RenderSystem::vkDevice, &imageCreateInfo, nullptr, &image));
@@ -93,8 +161,8 @@ namespace Renderer
 			VkMemoryRequirements memReqs;
 			vkGetImageMemoryRequirements(Renderer::Vulkan::RenderSystem::vkDevice, image, &memReqs);
 
-			Vulkan::GpuMemoryManager::AllocateOffset(memoryPoolType, memReqs.size, memReqs.alignment, memReqs.memoryTypeBits);
-			//VK_CHECK_RESULT(Renderer::Vulkan::RenderSystem::vkDevice, image,memoryAllocationInfo._vkDeviceMemory, memoryAllocationInfo._offset);
+			AllocateMemory(memoryAllocationInfo, memoryPoolType, memReqs);
+			VK_CHECK_RESULT(vkBindImageMemory(Renderer::Vulkan::RenderSystem::vkDevice, image, memoryAllocationInfo._vkDeviceMemory, memoryAllocationInfo._offset));
 
 			VkImageViewCreateInfo imageViewCreateInfo = {};
 			imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -111,6 +179,12 @@ namespace Renderer
 			imageViewCreateInfo.image = image;
 
 			ImageViewArray& imageViewArray = ImageManager::GetSubresourceImageViews(ref);
+			imageViewArray.resize(arrayLayerCount);
+
+			for (uint32_t arrayLayerIdx = 0u; arrayLayerIdx < arrayLayerCount; ++arrayLayerIdx)
+			{
+				imageViewArray[arrayLayerIdx].resize(mipLevelCount);
+			}
 
 			// Image views for each sub resource
 			for (uint32_t arrayLayerIdx = 0u; arrayLayerIdx < arrayLayerCount; ++arrayLayerIdx)

@@ -5,9 +5,9 @@ namespace Core
 {
 	namespace Memory
 	{
-		Allocator::Allocator(const std::size_t totalSize): m_TotalSize(totalSize), m_UsedMemory(0), m_NumAllocations(0)
+		Allocator::Allocator(): m_TotalSize(0), m_UsedMemory(0), m_NumAllocations(0)
 		{
-			assert(m_TotalSize > 0);
+			//assert(m_TotalSize > 0);
 		}
 
 		Allocator::~Allocator()

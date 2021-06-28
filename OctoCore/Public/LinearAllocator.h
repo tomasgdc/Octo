@@ -8,9 +8,9 @@ namespace Core
 		class LinearAllocator: public Allocator
 		{
 			public:
-				explicit LinearAllocator(const std::size_t totalSize);
+				explicit LinearAllocator();
 				
-				void Init() override;
+				void Init(const std::size_t totalSize) override;
 
 				/*
 					@param size
@@ -31,6 +31,11 @@ namespace Core
 					@param ptr
 				*/
 				void Free(void* ptr) override;
+
+				/*
+					@return
+				*/
+				std::size_t GetOffset() const;
 
 				void Reset();
 

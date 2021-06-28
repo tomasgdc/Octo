@@ -6,19 +6,19 @@ namespace Core
 { 
 	namespace Memory
 	{ 
-		LinearAllocator::LinearAllocator(const std::size_t totalSize) : Allocator(totalSize)
+		LinearAllocator::LinearAllocator() : Allocator()
 		{
 
 		}
 
-
-		void LinearAllocator::Init()
+		void LinearAllocator::Init(const std::size_t totalSize)
 		{
 			if (m_StartPtr != nullptr) 
 			{
 				free(m_StartPtr);
 			}
 
+			m_TotalSize = totalSize;
 			m_StartPtr = malloc(m_TotalSize);
 			m_Offset = 0;
 		}
@@ -76,6 +76,11 @@ namespace Core
 		void LinearAllocator::Free(void* ptr)
 		{
 			assert(false && "Use Reset() method");
+		}
+
+		std::size_t LinearAllocator::GetOffset() const
+		{
+			return m_Offset;
 		}
 
 		void LinearAllocator::Reset()

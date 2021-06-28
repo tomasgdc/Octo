@@ -32,7 +32,7 @@ std::string VkTools::VkResultToString(const VkResult& errorCode)
 		STR(ERROR_OUT_OF_DATE_KHR);
 		STR(ERROR_INCOMPATIBLE_DISPLAY_KHR);
 		STR(ERROR_VALIDATION_FAILED_EXT);
-		STR(ERROR_INVALID_SHADER_NV);
+		//STR(ERROR_INVALID_SHADER_NV);
 #undef STR
 	default:
 		return "UNKNOWN_ERROR";

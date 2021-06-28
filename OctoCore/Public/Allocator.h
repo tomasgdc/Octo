@@ -10,11 +10,11 @@ namespace Core
 		{
 		public:
 
-			Allocator(const std::size_t totalSize);
+			Allocator();
 
 			virtual ~Allocator();
 
-			virtual void Init() = 0;
+			virtual void Init(const std::size_t totalSize) = 0;
 
 			/*
 				@param size

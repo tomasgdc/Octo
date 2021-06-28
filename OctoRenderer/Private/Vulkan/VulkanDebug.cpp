@@ -22,7 +22,7 @@ namespace vkDebug
 		// This is a meta layer that enables all of the standard
 		// validation layers in the correct order :
 		// threading, parameter_validation, device_limits, object_tracker, image, core_validation, swapchain, and unique_objects
-		"VK_LAYER_LUNARG_standard_validation"
+		"VK_LAYER_KHRONOS_validation"
 	};
 
 	PFN_vkCreateDebugReportCallbackEXT CreateDebugReportCallback = VK_NULL_HANDLE;
@@ -117,14 +117,18 @@ namespace vkDebug
 	{
 		bool active = false;
 
+		/*
 		PFN_vkDebugMarkerSetObjectTagEXT pfnDebugMarkerSetObjectTag = VK_NULL_HANDLE;
 		PFN_vkDebugMarkerSetObjectNameEXT pfnDebugMarkerSetObjectName = VK_NULL_HANDLE;
 		PFN_vkCmdDebugMarkerBeginEXT pfnCmdDebugMarkerBegin = VK_NULL_HANDLE;
 		PFN_vkCmdDebugMarkerEndEXT pfnCmdDebugMarkerEnd = VK_NULL_HANDLE;
 		PFN_vkCmdDebugMarkerInsertEXT pfnCmdDebugMarkerInsert = VK_NULL_HANDLE;
+		*/
 
 		void setup(VkDevice device)
 		{
+			/*
+
 			pfnDebugMarkerSetObjectTag = reinterpret_cast<PFN_vkDebugMarkerSetObjectTagEXT>(vkGetDeviceProcAddr(device, "vkDebugMarkerSetObjectTagEXT"));
 			pfnDebugMarkerSetObjectName = reinterpret_cast<PFN_vkDebugMarkerSetObjectNameEXT>(vkGetDeviceProcAddr(device, "vkDebugMarkerSetObjectNameEXT"));
 			pfnCmdDebugMarkerBegin = reinterpret_cast<PFN_vkCmdDebugMarkerBeginEXT>(vkGetDeviceProcAddr(device, "vkCmdDebugMarkerBeginEXT"));
@@ -133,10 +137,14 @@ namespace vkDebug
 
 			// Set flag if at least one function pointer is present
 			active = (pfnDebugMarkerSetObjectName != VK_NULL_HANDLE);
+
+			*/
 		}
 
 		void setObjectName(VkDevice device, uint64_t object, VkDebugReportObjectTypeEXT objectType, const char *name)
 		{
+			/*
+
 			// Check for valid function pointer (may not be present if not running in a debugging application)
 			if (pfnDebugMarkerSetObjectName)
 			{
@@ -147,10 +155,14 @@ namespace vkDebug
 				nameInfo.pObjectName = name;
 				pfnDebugMarkerSetObjectName(device, &nameInfo);
 			}
+
+			*/
 		}
 
 		void setObjectTag(VkDevice device, uint64_t object, VkDebugReportObjectTypeEXT objectType, uint64_t name, size_t tagSize, const void* tag)
 		{
+			/*
+
 			// Check for valid function pointer (may not be present if not running in a debugging application)
 			if (pfnDebugMarkerSetObjectTag)
 			{
@@ -163,10 +175,14 @@ namespace vkDebug
 				tagInfo.pTag = tag;
 				pfnDebugMarkerSetObjectTag(device, &tagInfo);
 			}
+
+			*/
 		}
 
 		void beginRegion(VkCommandBuffer cmdbuffer, const char* pMarkerName, glm::vec4 color)
 		{
+			/*
+
 			// Check for valid function pointer (may not be present if not running in a debugging application)
 			if (pfnCmdDebugMarkerBegin)
 			{
@@ -176,10 +192,14 @@ namespace vkDebug
 				markerInfo.pMarkerName = pMarkerName;
 				pfnCmdDebugMarkerBegin(cmdbuffer, &markerInfo);
 			}
+
+			*/
 		}
 
 		void insert(VkCommandBuffer cmdbuffer, std::string markerName, glm::vec4 color)
 		{
+			/*
+
 			// Check for valid function pointer (may not be present if not running in a debugging application)
 			if (pfnCmdDebugMarkerInsert)
 			{
@@ -189,15 +209,21 @@ namespace vkDebug
 				markerInfo.pMarkerName = markerName.c_str();
 				pfnCmdDebugMarkerInsert(cmdbuffer, &markerInfo);
 			}
+
+			*/
 		}
 
 		void endRegion(VkCommandBuffer cmdBuffer)
 		{
+			/*
+
 			// Check for valid function (may not be present if not runnin in a debugging application)
 			if (pfnCmdDebugMarkerEnd)
 			{
 				pfnCmdDebugMarkerEnd(cmdBuffer);
 			}
+
+			*/
 		}
 
 		void setCommandBufferName(VkDevice device, VkCommandBuffer cmdBuffer, const char * name)

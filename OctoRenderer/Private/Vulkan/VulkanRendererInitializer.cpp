@@ -381,7 +381,7 @@ VkResult VulkanRendererInitializer::CreateVulkanInstance(bool bEnableValidation)
 	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 	appInfo.pApplicationName = className.c_str();
 	appInfo.pEngineName = className.c_str();
-	appInfo.apiVersion = VK_API_VERSION_1_0;
+	appInfo.apiVersion = VK_API_VERSION;
 	appInfo.pNext = NULL;
 	//appInfo.engineVersion = 
 
@@ -545,12 +545,14 @@ VkResult VulkanRendererInitializer::CreateDevice()
 	deviceCreateInfo.pQueueCreateInfos = &deviceQueueInfo;
 	deviceCreateInfo.pEnabledFeatures = &enabledFeatures;
 
+	/*
 	// enable the debug marker extension if it is present (likely meaning a debugging tool is present)
 	if (VkTools::CheckDeviceExtensionPresent(m_SwapChain.physicalDevice, VK_EXT_DEBUG_MARKER_EXTENSION_NAME))
 	{
 		enabledExtensions.push_back(VK_EXT_DEBUG_MARKER_EXTENSION_NAME);
 		//enableDebugMarkers = true;
 	}
+	*/
 
 	if (enabledExtensions.size() > 0)
 	{

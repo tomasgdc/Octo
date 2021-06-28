@@ -18,6 +18,7 @@ namespace Renderer
 			ImageData() : DOD::Resource::ResourceDatabase(_INTR_MAX_IMAGE_COUNT)
 			{
 				descImageType.resize(_INTR_MAX_IMAGE_COUNT);
+				descImageTextureType.resize(_INTR_MAX_IMAGE_COUNT);
 				descMemoryPoolType.resize(_INTR_MAX_IMAGE_COUNT);
 				descImageFormat.resize(_INTR_MAX_IMAGE_COUNT);
 				descImageFlags.resize(_INTR_MAX_IMAGE_COUNT);
@@ -29,10 +30,12 @@ namespace Renderer
 				vkImage.resize(_INTR_MAX_IMAGE_COUNT);
 				vkImageView.resize(_INTR_MAX_IMAGE_COUNT);
 				vkSubResourceImageViews.resize(_INTR_MAX_IMAGE_COUNT);
+				memoryAllocationInfo.resize(_INTR_MAX_IMAGE_COUNT);
 			}
 
 			// Description
 			std::vector<ImageType::Enum> descImageType;
+			std::vector< ImageTextureType::Enum> descImageTextureType;
 			std::vector<MemoryPoolTypes::Enum> descMemoryPoolType;
 			std::vector<VkFormat> descImageFormat;
 			std::vector<uint8_t> descImageFlags;
@@ -45,6 +48,7 @@ namespace Renderer
 			std::vector<VkImage> vkImage;
 			std::vector<VkImageView> vkImageView;
 			std::vector<ImageViewArray> vkSubResourceImageViews;
+			std::vector<MemoryPoolTypes::GpuMemoryAllocationInfo> memoryAllocationInfo;
 		};
 
 		struct ImageManager : DOD::Resource::ResourceManagerBase<ImageData, _INTR_MAX_IMAGE_COUNT>
@@ -116,6 +120,11 @@ namespace Renderer
 				return data.descImageType[ref._id];
 			}
 
+			static ImageTextureType::Enum& GetImageTextureType(const DOD::Ref ref)
+			{
+				return data.descImageTextureType[ref._id];
+			}
+
 			static VkImage& GetVkImage(const DOD::Ref ref)
 			{
 				return data.vkImage[ref._id];
@@ -164,6 +173,11 @@ namespace Renderer
 			static bool HasImageFlags(const DOD::Ref ref, uint8_t flag)
 			{
 				return (data.descImageFlags[ref._id] & flag) == flag;
+			}
+
+			static MemoryPoolTypes::GpuMemoryAllocationInfo& GetMemoryAllocationInfo(const DOD::Ref ref)
+			{
+				return data.memoryAllocationInfo[ref._id];
 			}
 		};
 	}

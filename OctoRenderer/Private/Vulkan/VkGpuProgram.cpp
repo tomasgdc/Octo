@@ -8,7 +8,7 @@ namespace Renderer
 {
 	namespace Resource
 	{
-		void GpuProgramManager::LoadAndCompileShader(const DOD::Ref& ref, std::string file_path, VkShaderStageFlagBits stage)
+		bool GpuProgramManager::LoadAndCompileShader(const DOD::Ref& ref, std::string file_path, VkShaderStageFlagBits stage)
 		{
 			VkPipelineShaderStageCreateInfo& shader_stage = GpuProgramManager::GetShaderStageCreateInfo(ref);
 			VkShaderModule& shader_module = GpuProgramManager::GetShaderModule(ref);
@@ -26,8 +26,13 @@ namespace Renderer
 			shader_stage.module = shader_module;
 			shader_stage.pName = "main"; // todo : make param
 
-			assert(shader_stage.module != nullptr);
-			//m_ShaderModules.push_back(shaderStage.module)
+			assert(shader_stage.module != VK_NULL_HANDLE);
+			if (shader_stage.module == VK_NULL_HANDLE)
+			{
+				return false;
+			}
+
+			return true;
 		}
 
 		void GpuProgramManager::DestroyResources(const std::vector<DOD::Ref>& refs)

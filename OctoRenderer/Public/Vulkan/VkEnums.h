@@ -1,6 +1,10 @@
 #pragma once
+//ThirdParty
 #include "ThirdParty\vulkan\vulkan.h"
 
+//Other
+#include <cstdint>
+#include <cstddef>
 
 namespace AttachementFlags
 {
@@ -40,6 +44,24 @@ namespace ImageType
 	};
 }
 
+namespace ImageTextureType
+{
+	enum Enum
+	{
+		kUnknown,
+
+		k1D,
+		k1DArray,
+		k2D,
+		k2DArray,
+		k3D,
+		k3DArray,
+
+		kCube,
+		kCubeArray
+	};
+}
+
 namespace MemoryPoolTypes
 { 
 	enum Enum
@@ -48,13 +70,31 @@ namespace MemoryPoolTypes
 		kStaticBuffers,
 		kStaticStagingBuffers,
 
-		kResolutionDependantImages,
-		kResolutionDependantBuffers,
-		kResolutionDependantStaticStagingBuffers,
+		kResolutionDependentImages,
+		kResolutionDependentBuffers,
+		kResolutionDependentStagingBuffers,
 
 		kVolatileStagingBuffers,
 
-		kCount
+		kCount,
+
+		kRangeStartStatic = kStaticImages,
+		kRangeEndStatic = kStaticStagingBuffers,
+		kRangeStartResolutionDependent = kResolutionDependentImages,
+		kRangeEndResolutionDependent = kResolutionDependentStagingBuffers,
+		kRangeStartVolatile = kVolatileStagingBuffers,
+		kRangeEndVolatile = kVolatileStagingBuffers
+	};
+
+	struct GpuMemoryAllocationInfo
+	{
+		MemoryPoolTypes::Enum _memoryPoolType;
+		uint32_t _pageIdx;
+		std::size_t _offset;
+		VkDeviceMemory _vkDeviceMemory;
+		uint32_t _sizeInBytes;
+		uint32_t _alignmentInBytes;
+		uint8_t* _mappedMemory;
 	};
 };
 

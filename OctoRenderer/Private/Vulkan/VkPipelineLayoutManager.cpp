@@ -28,7 +28,6 @@ namespace Renderer
 				VkPipelineLayoutCreateInfo pipeline_layout_create_info = VkTools::Initializer::PipelineLayoutCreateInfo(&descriptor_set_layout, 1);
 				VK_CHECK_RESULT(vkCreatePipelineLayout(Vulkan::RenderSystem::vkDevice, &pipeline_layout_create_info, nullptr, &pipeline_layout));
 
-
 				std::vector<VkDescriptorPoolSize> pool_size;
 				pool_size.reserve(set_layout_bindings.size());
 

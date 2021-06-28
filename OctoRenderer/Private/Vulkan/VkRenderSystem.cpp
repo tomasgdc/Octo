@@ -99,8 +99,8 @@ namespace Renderer
 			instanceCreateInfo.pApplicationInfo = &appInfo;
 			instanceCreateInfo.enabledExtensionCount = enabledExtensions.size();
 			instanceCreateInfo.ppEnabledExtensionNames = enabledExtensions.data();
-			instanceCreateInfo.enabledLayerCount = requiredValidationLayers.size();
-			instanceCreateInfo.ppEnabledLayerNames = requiredValidationLayers.data();
+			instanceCreateInfo.enabledLayerCount = vkDebug::validationLayerCount;
+			instanceCreateInfo.ppEnabledLayerNames = vkDebug::validationLayerNames;
 
 			VkResult  res = vkCreateInstance(&instanceCreateInfo, nullptr, &vkInstance);
 			VK_CHECK_RESULT(res);
@@ -619,9 +619,7 @@ namespace Renderer
 
 				Renderer::Resource::ImageManager::GetVkImage(backBufferRef) = vkSwapchainImages[i];
 				Renderer::Resource::ImageManager::GetImageView(backBufferRef) = vkSwapchainImageViews[i];
-				Renderer::Resource::ImageManager::GetSubresourceImageViews(backBufferRef).resize(1u);
-				Renderer::Resource::ImageManager::GetSubresourceImageViews(backBufferRef)[0u].resize(1u);
-				Renderer::Resource::ImageManager::GetSubresourceImageViews(backBufferRef)[0u][0u] = vkSwapchainImageViews[i];
+				//Renderer::Resource::ImageManager::GetSubresourceImageViews(backBufferRef)[0u][0u] = vkSwapchainImageViews[i];
 				Renderer::Resource::ImageManager::GetImageDimensions(backBufferRef) = glm::uvec3(backBufferDimensions, 1u);
 				Renderer::Resource::ImageManager::AddImageFlags(backBufferRef,
 					                                            ImageFlags::kExternalImage |

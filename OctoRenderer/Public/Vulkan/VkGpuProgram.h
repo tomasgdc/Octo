@@ -47,7 +47,7 @@ namespace Renderer
 				return ref;
 			}
 
-			static void LoadAndCompileShader(const DOD::Ref& ref, std::string file_path, VkShaderStageFlagBits stage);
+			static bool LoadAndCompileShader(const DOD::Ref& ref, std::string file_path, VkShaderStageFlagBits stage);
 
 			static VkPipelineShaderStageCreateInfo& GetShaderStageCreateInfo(const DOD::Ref& ref)
 			{

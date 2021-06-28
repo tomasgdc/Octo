@@ -40,12 +40,12 @@ namespace Renderer
 					}
 					case BufferObjectType::TANGENT:
 					{
-						description.offset = offsetof(drawVert, vertex);
+						description.offset = offsetof(drawVert, tangent);
 						break;
 					}
 					case BufferObjectType::BITANGENT:
 					{
-						description.offset = offsetof(drawVert, vertex);
+						description.offset = offsetof(drawVert, bitangent);
 						break;
 					}
 					case BufferObjectType::TEX:
@@ -55,7 +55,7 @@ namespace Renderer
 					}
 					case BufferObjectType::COLOR:
 					{
-						description.offset = offsetof(drawVert, vertex);
+						description.offset = offsetof(drawVert, color);
 						break;
 					}
 				}
