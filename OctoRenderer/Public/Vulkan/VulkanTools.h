@@ -110,6 +110,21 @@ namespace VkTools
 	 void SetImageLayout(VkCommandBuffer cmdbuffer, VkImage image, VkImageAspectFlags aspectMask, VkImageLayout oldImageLayout, VkImageLayout newImageLayout);
 
 
+	 /*
+		@param: VkCommandBuffer cmdbuffer,
+		@param: VkImage image,
+		@param: VkAccessFlags srcAccessMask,
+		@param: VkAccessFlags dstAccessMask,
+		@param: VkImageLayout oldImageLayout,
+		@param: VkImageLayout newImageLayout,
+		@param: VkPipelineStageFlags srcStageMask,
+		@param: VkPipelineStageFlags dstStageMask,
+		@param: VkImageSubresourceRange subresourceRange
+	*/
+	 void InsertImageMemoryBarrier(VkCommandBuffer cmdbuffer, VkImage image, VkImageLayout oldImageLayout, 
+			VkImageLayout newImageLayout, VkImageSubresourceRange subresourceRange, 
+			VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,  VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT);
+
 	/*
 		@param: uint32_t typeBit
 		@param: VkFlags properties
@@ -298,5 +313,7 @@ namespace VkTools
 		 VkPipelineViewportStateCreateInfo PipelineViewportStateCreateInfo(uint32_t viewportCount, uint32_t scissorCount, VkPipelineViewportStateCreateFlags flags);
 		 VkPipelineMultisampleStateCreateInfo PipelineMultisampleStateCreateInfo(VkSampleCountFlagBits rasterizationSamples, VkPipelineMultisampleStateCreateFlags flags);
 		 VkGraphicsPipelineCreateInfo PipelineCreateInfo(VkPipelineLayout layout, VkRenderPass renderPass, VkPipelineCreateFlags flags);
+
+		 void UpdateAccessMask(VkAccessFlags& accessFlags, VkImageLayout imageLayout);
 	}
 }

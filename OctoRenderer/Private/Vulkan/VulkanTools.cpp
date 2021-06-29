@@ -54,6 +54,33 @@ void VkTools::SetImageLayout(
 	SetImageLayout(cmdbuffer, image, aspectMask, oldImageLayout, newImageLayout, subresourceRange);
 }
 
+void VkTools::InsertImageMemoryBarrier(
+	VkCommandBuffer cmdbuffer,
+	VkImage image,
+	VkImageLayout oldImageLayout,
+	VkImageLayout newImageLayout,
+	VkImageSubresourceRange subresourceRange,
+	VkPipelineStageFlags srcStageMask,
+	VkPipelineStageFlags dstStageMask)
+{
+	VkImageMemoryBarrier imageMemoryBarrier = VkTools::Initializer::ImageMemoryBarrier();
+	VkTools::Initializer::UpdateAccessMask(imageMemoryBarrier.srcAccessMask, oldImageLayout);
+	VkTools::Initializer::UpdateAccessMask(imageMemoryBarrier.dstAccessMask, newImageLayout);
+	imageMemoryBarrier.oldLayout = oldImageLayout;
+	imageMemoryBarrier.newLayout = newImageLayout;
+	imageMemoryBarrier.image = image;
+	imageMemoryBarrier.subresourceRange = subresourceRange;
+
+	vkCmdPipelineBarrier(
+		cmdbuffer,
+		srcStageMask,
+		dstStageMask,
+		0,
+		0, nullptr,
+		0, nullptr,
+		1, &imageMemoryBarrier);
+}
+
 void VkTools::CreateFrameBufferAttachement(
 	uint32_t iWidth, uint32_t iHeight, 
 	VkFormat format, 
@@ -551,6 +578,35 @@ VkGraphicsPipelineCreateInfo VkTools::Initializer::PipelineCreateInfo(
 	return pipelineCreateInfo;
 }
 
+void VkTools::Initializer::UpdateAccessMask(VkAccessFlags& accessFlags, VkImageLayout imageLayout)
+{
+	if (imageLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+	{
+		accessFlags = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+	}
+	else if (imageLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
+	{
+		accessFlags = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+	}
+
+	else if (imageLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
+	{
+		accessFlags = VK_ACCESS_TRANSFER_WRITE_BIT;
+	}
+	else if (imageLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL)
+	{
+		accessFlags = VK_ACCESS_TRANSFER_READ_BIT;
+	}
+
+	else if (imageLayout == VK_IMAGE_LAYOUT_GENERAL)
+	{
+		accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+	}
+	else if (imageLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+	{
+		accessFlags = VK_ACCESS_SHADER_READ_BIT;
+	}
+}
 
 VkPipelineMultisampleStateCreateInfo VkTools::Initializer::PipelineMultisampleStateCreateInfo(
 	VkSampleCountFlagBits rasterizationSamples,

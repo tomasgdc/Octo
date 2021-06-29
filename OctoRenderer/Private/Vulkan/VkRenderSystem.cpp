@@ -52,7 +52,7 @@ namespace Renderer
 		VkSurfaceKHR                 RenderSystem::vkSurface = nullptr;
 		VkSwapchainKHR               RenderSystem::vkSwapchain = nullptr;
 		std::vector<VkImageView>     RenderSystem::vkSwapchainImageViews;
-		VkFormat                     RenderSystem::vkDepthFormatToUse;
+		VkFormat                     RenderSystem::vkDepthFormatToUse = VK_FORMAT_D32_SFLOAT;
 		VkFormat                     RenderSystem::vkColorFormatToUse = VK_FORMAT_B8G8R8A8_UNORM;
 		VkSemaphore                  RenderSystem::vkImageAcquireSemaphore;
 

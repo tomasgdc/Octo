@@ -253,5 +253,21 @@ namespace Renderer
 				imageViews.clear();
 			}
 		}
+
+		void ImageManager::InsertImageMemoryBarrier(VkCommandBuffer commandBuffer, DOD::Ref imageRef,
+			VkImageLayout srcImageLayout, VkImageLayout dstImageLayout,
+			VkPipelineStageFlags srcStages,
+			VkPipelineStageFlags dstStages)
+		{
+			VkImageSubresourceRange range;
+			range.aspectMask = GetImageFormat(imageRef) != Renderer::Vulkan::RenderSystem::vkDepthFormatToUse ? VK_IMAGE_ASPECT_COLOR_BIT : (VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT);
+
+			range.baseMipLevel = 0u;
+			range.levelCount = GetMipLevelCount(imageRef);
+			range.baseArrayLayer = 0u;
+			range.layerCount = GetArrayLayerCount(imageRef);
+
+			VkTools::InsertImageMemoryBarrier(commandBuffer, GetVkImage(imageRef), srcImageLayout, dstImageLayout, range, srcStages, dstStages);
+		}
 	}
 }

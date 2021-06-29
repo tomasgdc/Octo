@@ -179,6 +179,11 @@ namespace Renderer
 			{
 				return data.memoryAllocationInfo[ref._id];
 			}
+
+			static void InsertImageMemoryBarrier(VkCommandBuffer commandBuffer, DOD::Ref imageRef, 
+				VkImageLayout srcImageLayout, VkImageLayout dstImageLayout, 
+				VkPipelineStageFlags srcStages = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+				VkPipelineStageFlags dstStages = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT);
 		};
 	}
 }
