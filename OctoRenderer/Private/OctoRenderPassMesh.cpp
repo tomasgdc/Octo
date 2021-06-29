@@ -68,7 +68,7 @@ namespace Renderer
 		};
 
 #define DIM 1.0f
-		drawVert vertData[4] =
+		std::vector<drawVert> vertData =
 		{
 			{ glm::vec3(DIM,DIM,    0),	   glm::vec3(0,0,1), glm::vec2(1,1) },
 			{ glm::vec3(-DIM,DIM,  0),    glm::vec3(0,0,1), glm::vec2(0,1) },
@@ -83,11 +83,11 @@ namespace Renderer
 		//Update UBO
 		UpdateUniformBufferData();
 
-		m_StagingBufferVerticesRef = CreateBuffer("RenderPassMeshVertBuffer", VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, vertData, static_cast<uint32_t>(sizeof(drawVert)) * 4);
+		m_StagingBufferVerticesRef = CreateBuffer("RenderPassMeshVertBuffer", VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, vertData.data(), static_cast<uint32_t>(vertData.size() + sizeof(drawVert)));
 		m_StagingBufferIndicesRef = CreateBuffer("RenderPassMeshIndexBuffer", VK_BUFFER_USAGE_INDEX_BUFFER_BIT, indexBuffer.data(), indexBufferSize);
 		m_UniformBufferRef = CreateUniformBuffer("RenderPassMeshUniformBuffer", VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, &m_UboData, sizeof(m_UboData));
 
-		m_DrawCallRef = CreateDrawCall("RenderPassMeshDrawCall", indexBufferSize);
+		m_DrawCallRef = CreateDrawCall("RenderPassMeshDrawCall", indexBuffer.size());
 	}
 
 	void RenderPassMesh::Destroy()
@@ -201,7 +201,7 @@ namespace Renderer
 		{
 			{0, Renderer::Resource::BufferObjectType::VERTEX, VK_FORMAT_R32G32B32_SFLOAT},
 			{1, Renderer::Resource::BufferObjectType::NORMAL, VK_FORMAT_R32G32B32_SFLOAT},
-			{2, Renderer::Resource::BufferObjectType::TEX, VK_FORMAT_R32G32B32_SFLOAT}
+			{2, Renderer::Resource::BufferObjectType::TEX, VK_FORMAT_R32G32_SFLOAT}
 		};
 
 		Renderer::Resource::BufferLayoutManager::CreateResource(m_BufferLayoutRef);
