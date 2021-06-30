@@ -103,7 +103,7 @@ namespace Renderer
 
 		DOD::Ref& frameBufferRef = m_FrameBufferRefs[Renderer::Vulkan::RenderSystem::backBufferIndex];
 		DOD::Ref& imageRef = Renderer::Resource::FrameBufferManager::GetAttachedImiges(frameBufferRef)[0].imageRef;
-		Renderer::Resource::ImageManager::InsertImageMemoryBarrier(Renderer::Vulkan::RenderSystem::GetPrimaryCommandBuffer(), imageRef, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+		Renderer::Resource::ImageManager::InsertImageMemoryBarrier(Renderer::Vulkan::RenderSystem::GetPrimaryCommandBuffer(), imageRef, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
 
 		Renderer::Vulkan::RenderSystem::BeginRenderPass(m_RenderPassRef, m_FrameBufferRefs[Renderer::Vulkan::RenderSystem::backBufferIndex], VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS, 2, clearValues);
 		Renderer::Vulkan::DrawCall::QueuDrawCall(m_DrawCallRef, m_FrameBufferRefs[Renderer::Vulkan::RenderSystem::backBufferIndex], m_RenderPassRef, width, height);
