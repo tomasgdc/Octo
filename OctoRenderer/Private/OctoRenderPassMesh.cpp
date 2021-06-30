@@ -101,6 +101,10 @@ namespace Renderer
 		clearValues[0].color = { { 0.5f, 0.5f, 0.5f, 1.0f } };
 		clearValues[1].depthStencil = { 1.0f, 0 };
 
+		DOD::Ref& frameBufferRef = m_FrameBufferRefs[Renderer::Vulkan::RenderSystem::backBufferIndex];
+		DOD::Ref& imageRef = Renderer::Resource::FrameBufferManager::GetAttachedImiges(frameBufferRef)[0].imageRef;
+		Renderer::Resource::ImageManager::InsertImageMemoryBarrier(Renderer::Vulkan::RenderSystem::GetPrimaryCommandBuffer(), imageRef, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+
 		Renderer::Vulkan::RenderSystem::BeginRenderPass(m_RenderPassRef, m_FrameBufferRefs[Renderer::Vulkan::RenderSystem::backBufferIndex], VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS, 2, clearValues);
 		Renderer::Vulkan::DrawCall::QueuDrawCall(m_DrawCallRef, m_FrameBufferRefs[Renderer::Vulkan::RenderSystem::backBufferIndex], m_RenderPassRef, width, height);
 		Renderer::Vulkan::RenderSystem::EndRenderPass();
@@ -154,7 +158,7 @@ namespace Renderer
 		AttachementDescription sceneAttachment =
 		{
 			Renderer::Vulkan::RenderSystem::vkColorFormatToUse,
-			0u,
+			AttachementFlags::kClearOnLoad,
 			false
 		};
 
