@@ -67,7 +67,7 @@ namespace Renderer
 				subpass.flags = 0;
 				subpass.inputAttachmentCount = 0;
 				subpass.pInputAttachments = nullptr;
-				subpass.colorAttachmentCount = 1;
+				subpass.colorAttachmentCount = colorRefs.size();
 				subpass.pColorAttachments = !colorRefs.empty() ? colorRefs.data() : nullptr;
 				subpass.pResolveAttachments = nullptr;
 				subpass.pDepthStencilAttachment = !depthRefs.empty() ? depthRefs.data() : nullptr;
