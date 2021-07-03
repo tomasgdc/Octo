@@ -74,6 +74,14 @@ namespace Renderer
 				subpass.preserveAttachmentCount = 0;
 				subpass.pPreserveAttachments = nullptr;
 
+				VkSubpassDependency dependency = { 0 };
+				dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+				dependency.dstSubpass = 0;
+				dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+				dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+				dependency.srcAccessMask = 0;
+				dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
 				VkRenderPassCreateInfo renderPassInfo = {};
 				renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
 				renderPassInfo.pNext = nullptr;
@@ -81,8 +89,8 @@ namespace Renderer
 				renderPassInfo.pAttachments = attachementsDescriptions.data();
 				renderPassInfo.subpassCount = 1;
 				renderPassInfo.pSubpasses = &subpass;
-				renderPassInfo.dependencyCount = 0;
-				renderPassInfo.pDependencies = nullptr;
+				renderPassInfo.dependencyCount = 1;
+				renderPassInfo.pDependencies = &dependency;
 				renderPassInfo.flags = 0u;
 
 				VK_CHECK_RESULT(vkCreateRenderPass(Vulkan::RenderSystem::vkDevice, &renderPassInfo, nullptr, &render_pass));
