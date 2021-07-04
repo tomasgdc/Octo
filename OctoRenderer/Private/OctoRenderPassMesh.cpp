@@ -31,6 +31,18 @@
 glm::vec3	g_Rotation = glm::vec3();
 float       g_zoom = 1.0f;
 
+#define DIM 1.0f
+std::vector<drawVert> vertData =
+{
+	{ glm::vec3(DIM,DIM,    0),	   glm::vec3(0,0,1), glm::vec2(1,1) },
+	{ glm::vec3(-DIM,DIM,  0),    glm::vec3(0,0,1), glm::vec2(0,1) },
+	{ glm::vec3(-DIM, -DIM,  0),    glm::vec3(0,0,1), glm::vec2(0,0) },
+	{ glm::vec3(DIM,-DIM,  0),    glm::vec3(0,0,1), glm::vec2(1,0) },
+};
+
+// Setup indices
+std::vector<uint32_t> indexBuffer = { 0, 1, 2, 2,3,0 };
+
 namespace Renderer
 {
 	void RenderPassMesh::UpdateUniformBufferData()
@@ -67,17 +79,7 @@ namespace Renderer
 			float normal[3];
 		};
 
-#define DIM 1.0f
-		std::vector<drawVert> vertData =
-		{
-			{ glm::vec3(DIM,DIM,    0),	   glm::vec3(0,0,1), glm::vec2(1,1) },
-			{ glm::vec3(-DIM,DIM,  0),    glm::vec3(0,0,1), glm::vec2(0,1) },
-			{ glm::vec3(-DIM, -DIM,  0),    glm::vec3(0,0,1), glm::vec2(0,0) },
-			{ glm::vec3(DIM,-DIM,  0),    glm::vec3(0,0,1), glm::vec2(1,0) },
-		};
 
-		// Setup indices
-		std::vector<uint32_t> indexBuffer = { 0, 1, 2, 2,3,0 };
 		uint32_t indexBufferSize = indexBuffer.size() * sizeof(uint32_t);
 
 		//Update UBO
@@ -100,10 +102,6 @@ namespace Renderer
 		VkClearValue clearValues[2];
 		clearValues[0].color = { { 0.5f, 0.5f, 0.5f, 1.0f } };
 		clearValues[1].depthStencil = { 1.0f, 0 };
-
-		DOD::Ref& frameBufferRef = m_FrameBufferRefs[Renderer::Vulkan::RenderSystem::backBufferIndex];
-		DOD::Ref& imageRef = Renderer::Resource::FrameBufferManager::GetAttachedImiges(frameBufferRef)[0].imageRef;
-		Renderer::Resource::ImageManager::InsertImageMemoryBarrier(Renderer::Vulkan::RenderSystem::GetPrimaryCommandBuffer(), imageRef, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
 
 		Renderer::Vulkan::RenderSystem::BeginRenderPass(m_RenderPassRef, m_FrameBufferRefs[Renderer::Vulkan::RenderSystem::backBufferIndex], VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS, 2, clearValues);
 		Renderer::Vulkan::DrawCall::QueuDrawCall(m_DrawCallRef, m_FrameBufferRefs[Renderer::Vulkan::RenderSystem::backBufferIndex], m_RenderPassRef, width, height);

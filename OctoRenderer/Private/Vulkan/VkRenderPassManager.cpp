@@ -38,8 +38,8 @@ namespace Renderer
 						: VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 
 					attachmentDesc.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-					attachmentDesc.initialLayout = imageLayout;
-					attachmentDesc.finalLayout = imageLayout;
+					attachmentDesc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+					attachmentDesc.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 					attachmentDesc.flags = 0u;
 
 					attachementsDescriptions.push_back(std::move(attachmentDesc));
@@ -74,13 +74,25 @@ namespace Renderer
 				subpass.preserveAttachmentCount = 0;
 				subpass.pPreserveAttachments = nullptr;
 
-				VkSubpassDependency dependency = { 0 };
-				dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-				dependency.dstSubpass = 0;
-				dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-				dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-				dependency.srcAccessMask = 0;
-				dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+				VkSubpassDependency srcDependency = { 0 };
+				srcDependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+				srcDependency.dstSubpass = 0;
+				srcDependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+				srcDependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+				srcDependency.srcAccessMask = 0;
+				srcDependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+				srcDependency.dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+				VkSubpassDependency dstDependency = { 0 };
+				dstDependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+				dstDependency.dstSubpass = 0;
+				dstDependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+				dstDependency.dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+				dstDependency.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+				dstDependency.dstAccessMask = 0;
+				dstDependency.dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+				VkSubpassDependency dependencies[] = { srcDependency, dstDependency };
 
 				VkRenderPassCreateInfo renderPassInfo = {};
 				renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
@@ -89,8 +101,8 @@ namespace Renderer
 				renderPassInfo.pAttachments = attachementsDescriptions.data();
 				renderPassInfo.subpassCount = 1;
 				renderPassInfo.pSubpasses = &subpass;
-				renderPassInfo.dependencyCount = 1;
-				renderPassInfo.pDependencies = &dependency;
+				renderPassInfo.dependencyCount = 2;
+				renderPassInfo.pDependencies = dependencies;
 				renderPassInfo.flags = 0u;
 
 				VK_CHECK_RESULT(vkCreateRenderPass(Vulkan::RenderSystem::vkDevice, &renderPassInfo, nullptr, &render_pass));
