@@ -202,7 +202,7 @@ namespace Renderer
 		buffer_layout_description =
 		{
 			{0, Renderer::Resource::BufferObjectType::VERTEX, VK_FORMAT_R32G32B32_SFLOAT},
-			{1, Renderer::Resource::BufferObjectType::NORMAL, VK_FORMAT_R32G32B32_SFLOAT},
+			{1, Renderer::Resource::BufferObjectType::COLOR, VK_FORMAT_R32G32B32_SFLOAT},
 			{2, Renderer::Resource::BufferObjectType::TEX, VK_FORMAT_R32G32_SFLOAT}
 		};
 
