@@ -6,7 +6,7 @@
 //Core
 #include "OctoCore/Public/LinearAllocator.h"
 
-#define OCTO_GPU_PAGE_SIZE_IN_BYTES (80u * 1024u * 1024u)
+constexpr int64_t OCTO_GPU_PAGE_SIZE_IN_BYTES (80u * 1024u * 1024u);
 
 namespace Renderer
 {
