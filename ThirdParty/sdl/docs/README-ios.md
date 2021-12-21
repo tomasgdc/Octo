@@ -1,14 +1,14 @@
 iOS
 ======
 
-==============================================================================
 Building the Simple DirectMedia Layer for iOS 5.1+
 ==============================================================================
 
 Requirements: Mac OS X 10.8 or later and the iOS 7+ SDK.
 
 Instructions:
-1.  Open SDL.xcodeproj (located in Xcode-iOS/SDL) in Xcode.
+
+1.  Open SDL.xcodeproj (located in Xcode/SDL) in Xcode.
 2.  Select your desired target, and hit build.
 
 There are three build targets:
@@ -20,27 +20,13 @@ There are three build targets:
 	Package a project template together with the SDL for iPhone static libraries and copies of the SDL headers.  The template includes proper references to the SDL library and headers, skeleton code for a basic SDL program, and placeholder graphics for the application icon and startup screen.
 
 
-==============================================================================
 Build SDL for iOS from the command line
 ==============================================================================
 
-1. cd (PATH WHERE THE SDL CODE IS)/build-scripts
-2. ./iosbuild.sh
+1. cd (PATH WHERE THE SDL CODE IS)
+2. xcodebuild -project Xcode/SDL/SDL.xcodeproj -target 'Static Library-iOS' -configuration Release -sdk iphoneos13.2 clean build
 
-If everything goes fine, you should see a build/ios directory, inside there's
-two directories "lib" and "include". 
-"include" contains a copy of the SDL headers that you'll need for your project,
-make sure to configure XCode to look for headers there.
-"lib" contains find two files, libSDL2.a and libSDL2main.a, you have to add both 
-to your XCode project. These libraries contain three architectures in them,
-armv6 for legacy devices, armv7, and i386 (for the simulator).
-By default, iosbuild.sh will autodetect the SDK version you have installed using 
-xcodebuild -showsdks, and build for iOS >= 3.0, you can override this behaviour 
-by setting the MIN_OS_VERSION variable, ie:
 
-MIN_OS_VERSION=4.2 ./iosbuild.sh
-
-==============================================================================
 Using the Simple DirectMedia Layer for iOS
 ==============================================================================
 
@@ -58,7 +44,7 @@ Here is a more manual method:
 4.  Remove the ApplicationDelegate.h and ApplicationDelegate.m files -- SDL for iOS provides its own UIApplicationDelegate.  Remove MainWindow.xib -- SDL for iOS produces its user interface programmatically.
 5.  Delete the contents of main.m and program your app as a regular SDL program instead.  You may replace main.m with your own main.c, but you must tell Xcode not to use the project prefix file, as it includes Objective-C code.
 
-==============================================================================
+
 Notes -- Retina / High-DPI and window sizes
 ==============================================================================
 
@@ -87,7 +73,7 @@ orthographic projection matrix using the size in screen coordinates
 (SDL_GetWindowSize()) can be used in order to display content at the same scale
 no matter whether a Retina device is used or not.
 
-==============================================================================
+
 Notes -- Application events
 ==============================================================================
 
@@ -150,7 +136,6 @@ e.g.
     }
 
     
-==============================================================================
 Notes -- Accelerometer as Joystick
 ==============================================================================
 
@@ -158,7 +143,7 @@ SDL for iPhone supports polling the built in accelerometer as a joystick device.
 
 The main thing to note when using the accelerometer with SDL is that while the iPhone natively reports accelerometer as floating point values in units of g-force, SDL_JoystickGetAxis() reports joystick values as signed integers.  Hence, in order to convert between the two, some clamping and scaling is necessary on the part of the iPhone SDL joystick driver.  To convert SDL_JoystickGetAxis() reported values BACK to units of g-force, simply multiply the values by SDL_IPHONE_MAX_GFORCE / 0x7FFF.
 
-==============================================================================
+
 Notes -- OpenGL ES
 ==============================================================================
 
@@ -178,7 +163,7 @@ OpenGL ES on iOS doesn't use the traditional system-framebuffer setup provided i
 
 The above objects can be obtained via SDL_GetWindowWMInfo() (in SDL_syswm.h).
 
-==============================================================================
+
 Notes -- Keyboard
 ==============================================================================
 
@@ -194,7 +179,12 @@ SDL_bool SDL_IsTextInputActive()
 	-- returns whether or not text events are enabled (and the onscreen keyboard is visible)
 
 
+Notes -- Mouse
 ==============================================================================
+
+iOS now supports Bluetooth mice on iPad, but by default will provide the mouse input as touch. In order for SDL to see the real mouse events, you should set the key UIApplicationSupportsIndirectInputEvents to true in your Info.plist
+
+
 Notes -- Reading and Writing files
 ==============================================================================
 
@@ -214,7 +204,7 @@ When your SDL based iPhone application starts up, it sets the working directory 
 More information on this subject is available here:
 http://developer.apple.com/library/ios/#documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/Introduction/Introduction.html
 
-==============================================================================
+
 Notes -- iPhone SDL limitations
 ==============================================================================
 
@@ -227,7 +217,23 @@ Textures:
 Loading Shared Objects:
 	This is disabled by default since it seems to break the terms of the iOS SDK agreement for iOS versions prior to iOS 8. It can be re-enabled in SDL_config_iphoneos.h.
 
+
+Notes -- CoreBluetooth.framework
 ==============================================================================
+
+SDL_JOYSTICK_HIDAPI is disabled by default. It can give you access to a lot
+more game controller devices, but it requires permission from the user before
+your app will be able to talk to the Bluetooth hardware. "Made For iOS"
+branded controllers do not need this as we don't have to speak to them
+directly with raw bluetooth, so many apps can live without this.
+
+You'll need to link with CoreBluetooth.framework and add something like this
+to your Info.plist:
+
+<key>NSBluetoothPeripheralUsageDescription</key>
+<string>MyApp would like to remain connected to nearby bluetooth Game Controllers and Game Pads even when you're not using the app.</string>
+
+
 Game Center 
 ==============================================================================
 
@@ -264,3 +270,20 @@ e.g.
     #endif
         return 0;
     }
+
+
+Deploying to older versions of iOS
+==============================================================================
+
+SDL supports deploying to older versions of iOS than are supported by the latest version of Xcode, all the way back to iOS 6.1
+
+In order to do that you need to download an older version of Xcode:
+https://developer.apple.com/download/more/?name=Xcode
+
+Open the package contents of the older Xcode and your newer version of Xcode and copy over the folders in Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/DeviceSupport
+
+Then open the file Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/SDKSettings.plist and add the versions of iOS you want to deploy to the key Root/DefaultProperties/DEPLOYMENT_TARGET_SUGGESTED_VALUES
+
+Open your project and set your deployment target to the desired version of iOS
+
+Finally, remove GameController from the list of frameworks linked by your application and edit the build settings for "Other Linker Flags" and add -weak_framework GameController
