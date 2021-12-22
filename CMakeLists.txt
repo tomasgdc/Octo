@@ -37,9 +37,9 @@ INCLUDE_DIRECTORIES(
 # Set preprocessor defines
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOMINMAX -D_USE_MATH_DEFINES")
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-add_definitions(-std=c++14)
-add_definitions(-std=c++0x)
-add_definitions(-std=gnu++14)
+#add_definitions(-std=c++14)
+#add_definitions(-std=c++0x)
+#add_definitions(-std=gnu++14)
 
 
 SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Lib)
@@ -64,10 +64,11 @@ include_directories(${FREETYPE_INCLUDE_DIR})
 set(ZLIB_LIB_SEARCH_PATH ${CMAKE_SOURCE_DIR}/ThirdParty/assimp/build/contrib/zlib)
 find_package(Zlib REQUIRED)
 
-find_library(VULKAN_LIB NAMES vulkan-1 vulkan PATHS ${CMAKE_SOURCE_DIR}/App)
+#find_library(VULKAN_LIB NAMES vulkan-1 vulkan PATHS ${CMAKE_SOURCE_DIR}/App)
+find_package(Vulkan REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DVK_USE_PLATFORM_WIN32_KHR")
 
-message(STATUS "Vulkan lib path:   " 		${VULKAN_LIB})
+message(STATUS "Vulkan lib path:   " 		${Vulkan_LIBRARY})
 message(STATUS "SDL2 lib path: 	   "   		${SDL2_LIBRARY})
 message(STATUS "Assimp lib path:   " 		${ASSIMP_LIBRARIES})
 message(STATUS "Freetype lib path: " 		${FREETYPE_LIBRARIES})
