@@ -40,6 +40,7 @@
 
 //Other
 #include <filesystem>
+#include <chrono>
 
 //func
 LRESULT CALLBACK HandleWindowMessages(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
