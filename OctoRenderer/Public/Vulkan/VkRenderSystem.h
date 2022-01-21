@@ -35,6 +35,7 @@ namespace Renderer
 
 			static VkQueue                       vkQueue;
 			static uint32_t                      vkGraphicsQueueFamilyIndex;
+			
 
 			static VkSurfaceKHR                  vkSurface;
 			static VkSwapchainKHR                vkSwapchain;
@@ -45,6 +46,7 @@ namespace Renderer
 
 			static uint32_t                      backBufferIndex;
 			static uint32_t                      activeBackbufferMask;
+			static uint32_t						 allocatedSecondaryCmdBufferCount;
 			static glm::uvec2                    backBufferDimensions;
 
 			static VkPipelineCache               vkPipelineCache;
@@ -128,6 +130,14 @@ namespace Renderer
 			static VkCommandBuffer& GetSecondaryCommandBuffer(uint32_t commandBufferIndex)
 			{
 				return vkSecondaryCommandBuffers[backBufferIndex * SECONDARY_COMMAND_BUFFER_COUNT + commandBufferIndex];
+			}
+
+			static uint32_t RequestSecondaryCommandBuffers(uint32_t p_Count)
+			{
+				assert((allocatedSecondaryCmdBufferCount + p_Count) < SECONDARY_COMMAND_BUFFER_COUNT);
+				uint32_t firstIdx = allocatedSecondaryCmdBufferCount;
+				allocatedSecondaryCmdBufferCount += p_Count;
+				return firstIdx;
 			}
 		};
 	}

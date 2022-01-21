@@ -79,21 +79,20 @@ namespace Renderer
 			uint32_t height;
 		};
 
-		uint32_t secondaryCommandBufferIndex = 0;
 		void DrawCall::QueuDrawCall(const DOD::Ref& ref, const DOD::Ref& frameBuffer, const DOD::Ref& renderPass, int width, int height)
 		{
 			DrawCallParallelTask task;
 			task.drawCallRef = ref;
 			task.frameBufferRef = frameBuffer;
 			task.renderPassRef = renderPass;
-			task.secondaryCommandBufferIndex = secondaryCommandBufferIndex;
+			task.secondaryCommandBufferIndex = RenderSystem::RequestSecondaryCommandBuffers(1u);
 			task.width = width;
 			task.height = height;
 
 			task.Execute();
 
 			vkCmdExecuteCommands(RenderSystem::GetPrimaryCommandBuffer(), 1u,
-				&Renderer::Vulkan::RenderSystem::GetSecondaryCommandBuffer(secondaryCommandBufferIndex));
+				&Renderer::Vulkan::RenderSystem::GetSecondaryCommandBuffer(task.secondaryCommandBufferIndex));
 		}
 	}
 }

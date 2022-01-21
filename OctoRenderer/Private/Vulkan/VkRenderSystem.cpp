@@ -59,6 +59,7 @@ namespace Renderer
 
 		uint32_t                     RenderSystem::backBufferIndex = 0u;
 		uint32_t                     RenderSystem::activeBackbufferMask = 0u;
+		uint32_t					 RenderSystem::allocatedSecondaryCmdBufferCount = 0u;
 		glm::uvec2                   RenderSystem::backBufferDimensions = glm::uvec2(0, 0);
 
 		VkPipelineCache              RenderSystem::vkPipelineCache = nullptr;
@@ -696,6 +697,9 @@ namespace Renderer
 			VK_CHECK_RESULT(result);
 
 			WaitForFrame(backBufferIndex);
+
+			allocatedSecondaryCmdBufferCount = 0u;
+
 			BeginPrimaryCommandBuffer();
 			InsertPostPresentBarrier();
 		}
@@ -852,8 +856,7 @@ namespace Renderer
 				postPresentBarrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 				postPresentBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 				postPresentBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-				postPresentBarrier.subresourceRange.aspectMask =
-					VK_IMAGE_ASPECT_COLOR_BIT;
+				postPresentBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 				postPresentBarrier.subresourceRange.baseMipLevel = 0u;
 				postPresentBarrier.subresourceRange.levelCount = 1u;
 				postPresentBarrier.subresourceRange.baseArrayLayer = 0u;
