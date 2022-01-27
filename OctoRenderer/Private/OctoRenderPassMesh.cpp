@@ -65,11 +65,11 @@ namespace Renderer
 	void RenderPassMesh::Init()
 	{		
 		LoadShaders("triangle.vert.spv", "triangle.frag.spv");
-		CreatePipelineLayout("RenderPassMeshPipelineLayout");
-		CreateRenderPass("RenderPassMeshRenderPass");
-		CreateFramBuffer("RenderPassMeshFrameBuffer");
-		CrreateBufferLayout("RenderPassMeshBufferLayout");
-		CreatePipeline("RenderPassMeshPipeline");
+		CreatePipelineLayout("RenderPassMesh_PipelineLayout");
+		CreateRenderPass("RenderPassMesh_RenderPass");
+		CreateFramBuffer("RenderPassMesh_FrameBuffer");
+		CrreateBufferLayout("RenderPassMesh_BufferLayout");
+		CreatePipeline("RenderPassMesh_Pipeline");
 
 		//SENDING DATA TO GPU
 		struct Vertex
@@ -173,16 +173,16 @@ namespace Renderer
 
 		for (int backBufferIndex = 0; backBufferIndex < Renderer::Vulkan::RenderSystem::vkSwapchainImages.size(); backBufferIndex++)
 		{
-			DOD::Ref frame_buffer_Ref = Renderer::Resource::FrameBufferManager::CreateFrameBuffer(frameBufferName);
-
 			//Create image
-			std::string imageName = "BackBuffer" + frameBufferName + std::to_string(backBufferIndex);
+			std::string imageName = frameBufferName + std::to_string(backBufferIndex) + "_Image";
 			DOD::Ref imageRef = Renderer::Resource::ImageManager::CreateImage(imageName);
 			Renderer::Resource::ImageManager::ResetToDefault(imageRef);
 			Renderer::Resource::ImageManager::GetImageDimensions(imageRef) = glm::uvec3(800, 600, 1u);
 			Renderer::Resource::ImageManager::GetImageFormat(imageRef) = Renderer::Vulkan::RenderSystem::vkColorFormatToUse;
 			Renderer::Resource::ImageManager::CreateResource(imageRef);
 
+			std::string frBufferName = frameBufferName + std::to_string(backBufferIndex);
+			DOD::Ref frame_buffer_Ref = Renderer::Resource::FrameBufferManager::CreateFrameBuffer(frBufferName);
 			Renderer::Resource::FrameBufferManager::ResetToDefault(frame_buffer_Ref);
 			Renderer::Resource::FrameBufferManager::GetDimensions(frame_buffer_Ref) = Renderer::Vulkan::RenderSystem::backBufferDimensions;
 			Renderer::Resource::FrameBufferManager::GetAttachedImiges(frame_buffer_Ref).push_back(imageRef);
