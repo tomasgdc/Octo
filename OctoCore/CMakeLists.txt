@@ -7,12 +7,14 @@ SET(HEADERS
 	"Public/DODResource.h"
 	"Public/LinearAllocator.h"
 	"Public/Allocator.h"
+	"Public/LinearOffsetAllocator.h"
 )
 
 SET(SOURCES
 	"Private/AssimpLoader.cpp"
 	"Private/LinearAllocator.cpp"
 	"Private/Allocator.cpp"
+	"Private/LinearOffsetAllocator.cpp"
 )
 SOURCE_GROUP("Public" FILES ${HEADERS})
 SOURCE_GROUP("Private" FILES ${SOURCES})
