@@ -119,6 +119,8 @@ namespace Renderer
 				vkCmdEndRenderPass(GetPrimaryCommandBuffer());
 			}
 
+			static void DispatchDrawCall(const DOD::Ref& drawCallRef, VkCommandBuffer CommandBuffer);
+
 			static void InsertPostPresentBarrier();
 			static void InsertPrePresentBarrier();
 
