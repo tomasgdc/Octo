@@ -43,8 +43,7 @@ namespace Renderer
 
 				if (memoryFlags & (1u << page._memoryTypeIdx) > 0u && page.allocator.Fits(size, allignement))
 				{
-					void* ptr = page.allocator.Allocate(size, allignement);
-					const uint32_t offset = page.allocator.GetOffset();
+					const std::size_t offset = page.allocator.Allocate(size, allignement);
 
 					return { poolType, pageIdX, offset, page._vkDeviceMemory, size,
 							allignement, page._mappedMemory != nullptr ? &page._mappedMemory[offset]: nullptr };
@@ -83,8 +82,7 @@ namespace Renderer
 					}
 
 					//assert(page.allocator.Fits(size, ) && "Allocation does not fit in a single page");
-					void* ptr = page.allocator.Allocate(size, allignement);
-					const uint32_t offset = page.allocator.GetOffset();
+					const uint32_t offset = page.allocator.Allocate(size, allignement);
 
 					return { poolType, static_cast<uint32_t>(poolPages.size() - 1u), offset, page._vkDeviceMemory, size, allignement,
 					page._mappedMemory != nullptr ? &page._mappedMemory[offset] : nullptr};

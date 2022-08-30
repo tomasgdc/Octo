@@ -60,7 +60,8 @@ namespace Renderer
 				vkImageType = VK_IMAGE_TYPE_2D;
 				vkImageViewTypeSubResource = VK_IMAGE_VIEW_TYPE_2D;
 				vkImageViewType = arrayLayerCount == 1u ? VK_IMAGE_VIEW_TYPE_2D : VK_IMAGE_VIEW_TYPE_2D_ARRAY;
-				ImageManager::GetImageTextureType(ref) =  arrayLayerCount == 1u ? ImageTextureType::k2D : ImageTextureType::k2DArray;
+				ImageTextureType::Enum& textureType = ImageManager::GetImageTextureType(ref);
+				textureType =  arrayLayerCount == 1u ? ImageTextureType::k2D : ImageTextureType::k2DArray;
 			}
 			else if (dimensions.y >= 2.0f && dimensions.z >= 2.0f)
 			{
@@ -68,7 +69,8 @@ namespace Renderer
 				vkImageType = VK_IMAGE_TYPE_3D;
 				vkImageViewTypeSubResource = VK_IMAGE_VIEW_TYPE_3D;
 				vkImageViewType = VK_IMAGE_VIEW_TYPE_3D;
-				ImageManager::GetImageTextureType(ref) = arrayLayerCount == 1u ? ImageTextureType::k2D : ImageTextureType::k2DArray;
+				ImageTextureType::Enum& textureType = ImageManager::GetImageTextureType(ref);
+				textureType = arrayLayerCount == 1u ? ImageTextureType::k2D : ImageTextureType::k2DArray;
 			}
 
 			VkImageCreateInfo imageCreateInfo = {};

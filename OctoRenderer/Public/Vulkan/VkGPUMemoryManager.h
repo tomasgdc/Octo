@@ -4,7 +4,7 @@
 #include "VkEnums.h"
 
 //Core
-#include "OctoCore/Public/LinearAllocator.h"
+#include "OctoCore/Public/LinearOffsetAllocator.h"
 
 constexpr int64_t OCTO_GPU_PAGE_SIZE_IN_BYTES (80u * 1024u * 1024u);
 
@@ -14,7 +14,7 @@ namespace Renderer
 	{
 		struct GpuMemoryPage
 		{
-			Core::Memory::LinearAllocator allocator;
+			Core::Memory::LinearOffsetAllocator allocator;
 			VkDeviceMemory _vkDeviceMemory;
 			uint8_t* _mappedMemory;
 			uint32_t _memoryTypeIdx;
