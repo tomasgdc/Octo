@@ -1,5 +1,6 @@
 #pragma once
 #include "OctoRenderPassMesh.h"
+#include "OctoRenderPassFullScreen.h"
 
 namespace Renderer
 {
@@ -11,5 +12,6 @@ namespace Renderer
 
 		private:
 			static std::vector<Renderer::RenderPassMesh> m_MeshRenderPasses;
+			static Renderer::RenderPassFullScreen m_RenderPassFullScreen;
 	};
 }

@@ -28,20 +28,23 @@
 #include <ThirdParty/glm/glm/gtx/matrix_operation.hpp>
 #include <ThirdParty\glm\glm\gtx\orthonormalize.hpp>
 
-glm::vec3	g_Rotation = glm::vec3();
-float       g_zoom = 1.0f;
+namespace
+{
+	glm::vec3	g_Rotation = glm::vec3();
+	float       g_zoom = 1.0f;
 
 #define DIM 1.0f
-std::vector<drawVert> vertData =
-{
-	{ glm::vec3(DIM,DIM,    0),	   glm::vec3(0,0,1), glm::vec2(1,1) },
-	{ glm::vec3(-DIM,DIM,  0),    glm::vec3(0,0,1), glm::vec2(0,1) },
-	{ glm::vec3(-DIM, -DIM,  0),    glm::vec3(0,0,1), glm::vec2(0,0) },
-	{ glm::vec3(DIM,-DIM,  0),    glm::vec3(0,0,1), glm::vec2(1,0) },
-};
+	std::vector<drawVert> vertData =
+	{
+		{ glm::vec3(DIM,DIM,    0),	   glm::vec3(0,0,1), glm::vec2(1,1) },
+		{ glm::vec3(-DIM,DIM,  0),    glm::vec3(0,0,1), glm::vec2(0,1) },
+		{ glm::vec3(-DIM, -DIM,  0),    glm::vec3(0,0,1), glm::vec2(0,0) },
+		{ glm::vec3(DIM,-DIM,  0),    glm::vec3(0,0,1), glm::vec2(1,0) },
+	};
 
-// Setup indices
-std::vector<uint32_t> indexBuffer = { 0, 1, 2, 2,3,0 };
+	// Setup indices
+	std::vector<uint32_t> indexBuffer = { 0, 1, 2, 2,3,0 };
+}
 
 namespace Renderer
 {
@@ -103,8 +106,8 @@ namespace Renderer
 		clearValues[0].color = { { 0.5f, 0.5f, 0.5f, 1.0f } };
 		clearValues[1].depthStencil = { 1.0f, 0 };
 
-		Renderer::Vulkan::RenderSystem::BeginRenderPass(m_RenderPassRef, m_FrameBufferRefs[Renderer::Vulkan::RenderSystem::backBufferIndex], VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS, 2, clearValues);
-		Renderer::Vulkan::DrawCall::QueuDrawCall(m_DrawCallRef, m_FrameBufferRefs[Renderer::Vulkan::RenderSystem::backBufferIndex], m_RenderPassRef, width, height);
+		Renderer::Vulkan::RenderSystem::BeginRenderPass(m_RenderPassRef, m_FrameBufferRefs[Renderer::Vulkan::RenderSystem::backBufferIndex % m_FrameBufferRefs.size()], VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS, 2, clearValues);
+		Renderer::Vulkan::DrawCall::QueuDrawCall(m_DrawCallRef, m_FrameBufferRefs[Renderer::Vulkan::RenderSystem::backBufferIndex % m_FrameBufferRefs.size()], m_RenderPassRef, width, height);
 		Renderer::Vulkan::RenderSystem::EndRenderPass();
 	}
 

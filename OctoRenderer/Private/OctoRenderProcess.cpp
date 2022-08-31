@@ -4,13 +4,15 @@
 namespace Renderer
 { 
 	std::vector<Renderer::RenderPassMesh> RenderProcess::m_MeshRenderPasses;
+	Renderer::RenderPassFullScreen RenderProcess::m_RenderPassFullScreen;
 
 	void RenderProcess::Init()
 	{
 		Renderer::RenderPassMesh meshRenderPass;
 		meshRenderPass.Init();
-
 		m_MeshRenderPasses.emplace_back(std::move(meshRenderPass));
+
+		m_RenderPassFullScreen.Init();
 	}
 
 	void RenderProcess::Update(float dt)
@@ -20,6 +22,8 @@ namespace Renderer
 		clearValues[1].depthStencil = { 1.0f, 0 };
 
 		Renderer::Vulkan::RenderSystem::StartFrame();
+
+		m_RenderPassFullScreen.Render(dt, 800, 600);
 
 		for (auto& meshRenderPass : m_MeshRenderPasses)
 		{
@@ -35,5 +39,7 @@ namespace Renderer
 		{
 			meshRenderPass.Destroy();
 		}
+
+		m_RenderPassFullScreen.Destroy();
 	}
 }

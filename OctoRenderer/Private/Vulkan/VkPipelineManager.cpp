@@ -83,6 +83,7 @@ namespace Renderer
 					VK_DYNAMIC_STATE_VIEWPORT,
 					VK_DYNAMIC_STATE_SCISSOR
 				};
+
 				VkPipelineDynamicStateCreateInfo dynamicState =
 					VkTools::Initializer::PipelineDynamicStateCreateInfo(
 						dynamicStateEnables.data(),

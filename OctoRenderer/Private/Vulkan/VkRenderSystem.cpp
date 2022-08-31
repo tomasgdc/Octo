@@ -842,7 +842,7 @@ namespace Renderer
 			vkCmdBeginRenderPass(GetPrimaryCommandBuffer(), &renderPassBegin, p_SubpassContents);
 		}
 
-		void RenderSystem::DispatchDrawCall(const DOD::Ref& drawCallRef, VkCommandBuffer CommandBuffer)
+		void RenderSystem::DispatchDrawCall(const DOD::Ref& drawCallRef, VkCommandBuffer CommandBuffer, int width, int height)
 		{
 			const DOD::Ref pipeline_layout_ref = Renderer::Resource::DrawCallManager::GetPipelineLayoutRef(drawCallRef);
 			const DOD::Ref pipeline_ref = Renderer::Resource::DrawCallManager::GetPipelineRef(drawCallRef);
@@ -856,6 +856,12 @@ namespace Renderer
 			{
 				//DO SOMETHING
 				{
+					VkViewport viewport = VkTools::Initializer::Viewport((float)width, (float)height, 0.0f, 1.0f);
+					vkCmdSetViewport(CommandBuffer, 0, 1, &viewport);
+
+					VkRect2D scissor = VkTools::Initializer::Rect2D(width, height, 0, 0);
+					vkCmdSetScissor(CommandBuffer, 0, 1, &scissor);
+
 					vkCmdBindPipeline(CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
 
 					// Bind triangle vertex buffer (contains position and colors)
